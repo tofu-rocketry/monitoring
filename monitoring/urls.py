@@ -18,5 +18,5 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^availability/', include('availability.urls')),
+    url(r'^availability/', include('monitoring.availability.urls')),
 ]
