@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.http import HttpResponse
-from django.shortcuts import render
+import time
 
-# Create your views here.
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 
-def index(request):
-    return HttpResponse("Availability index.")
+@api_view()
+def status(requst):
+    if int(time.time()) % 2:
+        return Response("Everything OK")
+    else:
+        return Response("Everything NOT ok.")
