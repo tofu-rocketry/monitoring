@@ -1,4 +1,4 @@
-"""monitoring URL Configuration
+"""Monitoring URL Configuration.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.11/topics/http/urls/
@@ -19,4 +19,7 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^availability/', include('monitoring.availability.urls')),
+    # url(r'^publishing/', include('monitoring.publishing.urls')),
+    url(r'^api-auth/', include('rest_framework.urls',
+                               namespace='rest_framework')),
 ]
