@@ -4,16 +4,16 @@
 
 <body>
   <h2>Sites publishing cloud accounting records from 2018-06-19 onwards</h2>
-  <p>Page last updated: 2018-07-23 16:30:06.366960</p>
+  <p>Page last updated: {{ last_fetched|date:"c" }}</p>
   <table border="1">
     <tr>
       <th>Site</th><th>CloudType</th><th>LastUpdated</th>
     </tr>
     {% for site in sites %}
     <tr>
-      <td>{{site.name}}</td>
-      <td>{{site.script}}</td>
-      <td>{{site.updated}}</td>
+      <td>{{ site.name }}</td>
+      <td>{{ site.script }}</td>
+      <td>{{ site.updated }}</td>
     </tr>
     {% endfor %}
   </table>

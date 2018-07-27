@@ -17,5 +17,5 @@ class CloudSiteViewSet(viewsets.ModelViewSet):
         response = super(CloudSiteViewSet, self).list(request)
         # Wrap data in a dict so that it can display in template.
         if type(request.accepted_renderer) is TemplateHTMLRenderer:
-            response.data = {'sites': response.data}
+            response.data = {'sites': response.data, 'last_fetched': last_fetched}
         return response
