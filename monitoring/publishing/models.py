@@ -5,7 +5,7 @@ from django.db import models
 
 
 class CloudSite(models.Model):
-    fetched = models.DateTimeField(auto_now_add=True)
+    fetched = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=255, primary_key=True)
     script = models.CharField(max_length=255)
     updated = models.DateTimeField()
