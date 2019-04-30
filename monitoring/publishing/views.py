@@ -49,4 +49,8 @@ class CloudSiteViewSet(viewsets.ReadOnlyModelViewSet):
         if type(request.accepted_renderer) is TemplateHTMLRenderer:
             # Single result put in list to work with same HTML template.
             response.data = {'sites': [response.data], 'last_fetched': last_fetched}
+
+        response.data['returncode'] = 3
+        response.data['stdout'] = "UNKNOWN"
+
         return response
