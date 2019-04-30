@@ -11,8 +11,7 @@ from rest_framework.renderers import TemplateHTMLRenderer
 from models import CloudSite, VAnonCloudRecord
 from serializers import CloudSiteSerializer
 
-
-class CloudSiteViewSet(viewsets.ModelViewSet):
+class CloudSiteViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = CloudSite.objects.all()
     serializer_class = CloudSiteSerializer
     template_name = 'cloudsites.html'
