@@ -23,7 +23,6 @@ class CloudSiteViewSet(viewsets.ReadOnlyModelViewSet):
         if last_fetched.replace(tzinfo=None) < (datetime.today() - timedelta(hours=1, seconds=20)):
             print 'Out of date'
             fetchset =  VAnonCloudRecord.objects.using('cloud').raw("SELECT b.SiteName, COUNT(DISTINCT VMUUID) as VMs, CloudType, b.UpdateTime FROM (SELECT SiteName, MAX(UpdateTime) AS latest FROM VAnonCloudRecords WHERE UpdateTime>'2018-07-25' GROUP BY SiteName) AS a INNER JOIN VAnonCloudRecords AS b ON b.SiteName = a.SiteName AND b.UpdateTime = a.latest GROUP BY SiteName")
-            print fetchset
             for f in fetchset:
                 CloudSite.objects.update_or_create(defaults={'vms': f.VMs, 'script': f.CloudType, 'updated': f.UpdateTime}, name=f.SiteName)
         else:
