@@ -8,8 +8,14 @@ from django.db.models import Max
 from rest_framework import viewsets
 from rest_framework.renderers import TemplateHTMLRenderer
 
-from models import CloudSite, VAnonCloudRecord
-from serializers import CloudSiteSerializer
+from models import GridSite, CloudSite, VAnonCloudRecord
+from serializers import GridSiteSerializer, CloudSiteSerializer
+
+
+class GridSiteViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = GridSite.objects.all()
+    serializer_class = GridSiteSerializer
+    template_name = 'gridsites.html'
 
 
 class CloudSiteViewSet(viewsets.ReadOnlyModelViewSet):

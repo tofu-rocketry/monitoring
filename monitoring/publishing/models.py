@@ -4,6 +4,12 @@ from __future__ import unicode_literals
 from django.db import models
 
 
+class GridSite(models.Model):
+    fetched = models.DateTimeField(auto_now=True)
+    name = models.CharField(max_length=255, primary_key=True)
+    updated = models.DateTimeField()
+
+
 class CloudSite(models.Model):
     fetched = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=255, primary_key=True)

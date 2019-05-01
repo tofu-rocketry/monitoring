@@ -6,6 +6,7 @@ import views
 
 router = routers.SimpleRouter()
 router.register(r'cloud', views.CloudSiteViewSet)
+router.register(r'grid', views.GridSiteViewSet)
 
 
 urlpatterns = [
