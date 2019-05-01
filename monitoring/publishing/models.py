@@ -7,6 +7,7 @@ from django.db import models
 class CloudSite(models.Model):
     fetched = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=255, primary_key=True)
+    vms = models.IntegerField(default=0)
     script = models.CharField(max_length=255)
     updated = models.DateTimeField()
 
@@ -16,6 +17,7 @@ class CloudSite(models.Model):
 
 class VAnonCloudRecord(models.Model):
     SiteName = models.CharField(max_length=255, primary_key=True)
+    VMs = models.IntegerField()
     CloudType = models.CharField(max_length=255)
     UpdateTime = models.DateTimeField()
 
@@ -24,6 +26,8 @@ class VAnonCloudRecord(models.Model):
         db_table = 'vanoncloudrecords'
 
     def __str__(self):
-        return '%s, running "%s", updated at %s' % (self.SiteName,
+        return '%s running "%s" updated at %s with %s records' % (
+                                                    self.SiteName,
                                                     self.CloudType,
-                                                    self.UpdateTime)
+                                                    self.UpdateTime,
+                                                    self.VMs)

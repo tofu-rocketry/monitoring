@@ -7,11 +7,12 @@
   <p>Page last updated: {{ last_fetched|date:"c" }}</p>
   <table border="1">
     <tr>
-      <th>Site</th><th>CloudType</th><th>LastUpdated</th>
+      <th>Site</th><th>VMsInLastUpdate</th><th>CloudType</th><th>LastUpdated</th>
     </tr>
     {% for site in sites %}
     <tr>
       <td>{{ site.name }}</td>
+      <td>{{ site.vms }}</td>
       <td>{{ site.script }}</td>
       <td>{{ site.updated }}</td>
     </tr>

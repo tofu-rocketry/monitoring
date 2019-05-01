@@ -5,4 +5,4 @@ from models import CloudSite
 class CloudSiteSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = CloudSite
-        fields = ('url', 'name', 'script', 'updated')
+        fields = ('url', 'name', 'vms', 'script', 'updated')
