@@ -1,0 +1,35 @@
+<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	<html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>APEL Publication Summary : {{ sites.0.name }}</title>
+                        <link href="http://goc-accounting.grid-support.ac.uk/core/stylesheet.css" rel="stylesheet" type="text/css" />
+                        <link href="http://goc-accounting.grid-support.ac.uk/core/style.css" rel="stylesheet" type="text/css" />
+		</head>
+<body>
+<h3>APEL Publication Test</h3>
+<ul>
+ <li> Displays the last time the site published accounting data to the GOC.
+ <li> A warning / error is raised if the site has not published accounting data for 7 / 31 days, if a site has not published data for 31 days, which usually signifies a problem with APEL or RGMA services.
+ <li> Information about APEL <a href='https://wiki.egi.eu/wiki/APEL'>APEL Wiki</a>
+ <li> Contact: apel-admins [at] stfc.ac.uk
+<li>lastBuild : {{ last_fetched|date:"Y-m-d H:i:s.u"|slice:":22" }}</ul><hr>
+
+<table>
+  <tr><th colspan='5' class='tableheader'>{{ sites.0.name }}</td></tr>
+  <tr>
+    <th class='tableheader'>ExecutingSite</th>
+    <th class='tableheader'>MeasurementDate</th>
+    <th class='tableheader'>MeasurementTime</th>
+    <th class='tableheader'>Publication <br> Status</th>
+  </tr>
+  <tr>
+    <td align='middle' class='tabletext'>{{ sites.0.name }}</td>
+    <td align='middle' class='tabletext'>{{ sites.0.updated }}</td>
+    <td align='middle' class='tabletext'>{{ sites.0.updated }}</td>
+    <td align='middle' class='tabletext'>OK [ last published 1 days ago: 2019-04-30 ]</td>
+  </tr>
+</table>
+
+</html>
