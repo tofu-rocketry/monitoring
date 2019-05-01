@@ -10,6 +10,15 @@ class GridSite(models.Model):
     updated = models.DateTimeField()
 
 
+class VSuperSummaries(models.Model):
+    Site = models.CharField(max_length=255, primary_key=True)
+    LatestPublish = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'VSuperSummaries'
+
+
 class CloudSite(models.Model):
     fetched = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=255, primary_key=True)
