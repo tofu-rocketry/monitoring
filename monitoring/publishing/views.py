@@ -31,13 +31,23 @@ class GridSiteViewSet(viewsets.ReadOnlyModelViewSet):
             print 'No need to update'
 
         response = super(GridSiteViewSet, self).retrieve(request)
+        date = response.data['updated'].replace(tzinfo=None)
+
         # Wrap data in a dict so that it can display in template.
         if type(request.accepted_renderer) is TemplateHTMLRenderer:
             # Single result put in list to work with same HTML template.
             response.data = {'sites': [response.data], 'last_fetched': last_fetched}
 
-        response.data['returncode'] = 3
-        response.data['stdout'] = "UNKNOWN"
+        diff = datetime.today() - date
+        if diff <= timedelta(days=7):
+            response.data['returncode'] = 0
+            response.data['stdout'] = "OK [ last published %s days ago: %s ]" % (diff.days, date.strftime("%Y-%m-%d"))
+        elif diff > timedelta(days=7):
+            response.data['returncode'] = 1
+            response.data['stdout'] = "WARNING [ last published %s days ago: %s ]" % (diff.days, date.strftime("%Y-%m-%d"))
+        else:
+            response.data['returncode'] = 3
+            response.data['stdout'] = "UNKNOWN"
 
         return response
 
