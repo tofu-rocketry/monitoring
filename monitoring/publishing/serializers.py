@@ -1,11 +1,11 @@
 from rest_framework import serializers
 
-from models import CloudSite
+from models import CloudSite, GridSite
 
 
 class GridSiteSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = CloudSite
+        model = GridSite
         fields = ('url', 'name', 'updated')
 
 
