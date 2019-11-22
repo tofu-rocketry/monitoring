@@ -14,7 +14,7 @@
       <td>{{ site.name }}</td>
       <td>{{ site.vms }}</td>
       <td>{{ site.script }}</td>
-      <td>{{ site.updated }}</td>
+      <td>{{ site.updated|date:"Y-m-d H:i:s" }}</td>
     </tr>
     {% endfor %}
   </table>
