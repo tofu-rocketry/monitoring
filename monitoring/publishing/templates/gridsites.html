@@ -26,8 +26,8 @@
   </tr>
   <tr>
     <td align='middle' class='tabletext'>{{ sites.0.name }}</td>
-    <td align='middle' class='tabletext'>{{ sites.0.updated|date:"Y-m-d" }}</td>
-    <td align='middle' class='tabletext'>{{ sites.0.updated|date:"G:i:s" }}</td>
+    <td align='middle' class='tabletext'>{{ last_fetched|date:"Y-m-d" }}</td>
+    <td align='middle' class='tabletext'>{{ last_fetched|date:"G:i:s" }}</td>
     <td align='middle' class='tabletext'>{{ stdout }}</td>
   </tr>
 </table>
