@@ -13,6 +13,9 @@ class GridSiteSync(models.Model):
     repository_count = models.IntegerField()
     difference = models.IntegerField()
 
+    class Meta:
+        unique_together = ['site', 'year', 'month']
+
 
 class VSuperSummaries(models.Model):
     Site = models.CharField(max_length=255, primary_key=True)
