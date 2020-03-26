@@ -6,9 +6,9 @@ from django.db import models
 
 class GridSiteSync(models.Model):
     fetched = models.DateTimeField(auto_now=True)
-    site = models.CharField(max_length=255, primary_key=True)
-    year = models.IntegerField(primary_key=True)
-    month = models.IntegerField(primary_key=True)
+    site = models.CharField(max_length=255)
+    year = models.IntegerField()
+    month = models.IntegerField()
     site_count = models.IntegerField()
     repository_count = models.IntegerField()
     difference = models.IntegerField()
