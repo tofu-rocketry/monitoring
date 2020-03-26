@@ -20,6 +20,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^availability/', include('monitoring.availability.urls')),
     url(r'^publishing/', include('monitoring.publishing.urls')),
+    url(r'^synchronisation/', include('monitoring.synchronisation.urls')),
     url(r'^api-auth/', include('rest_framework.urls',
                                namespace='rest_framework')),
 ]
