@@ -7,6 +7,7 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path('availability/', include('monitoring.availability.urls')),
     path('publishing/', include('monitoring.publishing.urls')),
+    path('synchronisation/', include('monitoring.synchronisation.urls')),
     path('benchmarks/', include('monitoring.benchmarks.urls')),
     path('iris/', include('monitoring.iris.urls')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
