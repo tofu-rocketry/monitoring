@@ -93,6 +93,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'monitoring.publishing',
     'monitoring.availability',
+    'monitoring.synchronisation',
     'monitoring.benchmarks',
     'monitoring.iris',
     'monitoring.validator',
