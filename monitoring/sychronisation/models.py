@@ -4,10 +4,13 @@ from __future__ import unicode_literals
 from django.db import models
 
 
-class GridSite(models.Model):
+class GridSiteSync(models.Model):
     fetched = models.DateTimeField(auto_now=True)
-    name = models.CharField(max_length=255, primary_key=True)
-    updated = models.DateTimeField()
+    site = models.CharField(max_length=255, primary_key=True)
+    year = models.IntegerField(primary_key=True)
+    month = models.IntegerField(primary_key=True)
+    site_count = models.IntegerField()
+    repository_count = models.IntegerField()
 
 
 class VSuperSummaries(models.Model):
