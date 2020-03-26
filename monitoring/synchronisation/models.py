@@ -11,6 +11,7 @@ class GridSiteSync(models.Model):
     month = models.IntegerField(primary_key=True)
     site_count = models.IntegerField()
     repository_count = models.IntegerField()
+    difference = models.IntegerField()
 
 
 class VSuperSummaries(models.Model):
