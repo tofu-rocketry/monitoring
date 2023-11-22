@@ -18,22 +18,24 @@ class GridSiteSync(models.Model):
 
 
 class VSuperSummaries(models.Model):
-    Site = models.CharField(max_length=255, primary_key=True)
-    Year = models.IntegerField(primary_key=True)
-    Month = models.IntegerField(primary_key=True)
+    Site = models.CharField(max_length=255)
+    Year = models.IntegerField()
+    Month = models.IntegerField()
     NumberOfJobs = models.IntegerField()
 
     class Meta:
         managed = False
         db_table = 'VSuperSummaries'
+        unique_together = ('Site', 'Year', 'Month')
 
 
 class VSyncRecords(models.Model):
-    Site = models.CharField(max_length=255, primary_key=True)
-    Year = models.IntegerField(primary_key=True)
-    Month = models.IntegerField(primary_key=True)
+    Site = models.CharField(max_length=255)
+    Year = models.IntegerField()
+    Month = models.IntegerField()
     NumberOfJobs = models.IntegerField()
 
     class Meta:
         managed = False
         db_table = 'VSyncRecords'
+        unique_together = ('Site', 'Year', 'Month')
