@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from datetime import datetime, timedelta
 
-from django.db.models import Sum
+from django.db.models import Max
 
 from rest_framework import viewsets
 from rest_framework.renderers import TemplateHTMLRenderer
