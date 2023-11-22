@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from models import GridSiteSync
+from monitoring.synchronisation.models import GridSiteSync
 
 
 class GridSiteSyncSerializer(serializers.HyperlinkedModelSerializer):

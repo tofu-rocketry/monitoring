@@ -2,7 +2,7 @@ from django.conf.urls import include, url
 
 from rest_framework import routers
 
-import views
+from monitoring.synchronisation import views
 
 router = routers.SimpleRouter()
 router.register(r'grid', views.GridSiteSyncViewSet)

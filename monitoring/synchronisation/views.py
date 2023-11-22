@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from datetime import datetime, timedelta
+
 from django.db.models import Sum
 
 from rest_framework import viewsets
 from rest_framework.renderers import TemplateHTMLRenderer
 
-from models import GridSiteSync, VSuperSummaries, VSyncRecords
-from serializers import GridSiteSyncSerializer
+from monitoring.synchronisation.models import GridSiteSync, VSuperSummaries, VSyncRecords
+from monitoring.synchronisation.serializers import GridSiteSyncSerializer
 
 
 class GridSiteSyncViewSet(viewsets.ReadOnlyModelViewSet):
@@ -19,14 +21,14 @@ class GridSiteSyncViewSet(viewsets.ReadOnlyModelViewSet):
         last_fetched = GridSiteSync.objects.aggregate(Max('fetched'))['fetched__max']
         # If there's no data then last_fetched is None.
         if last_fetched is not None:
-            print last_fetched.replace(tzinfo=None), datetime.today() - timedelta(hours=1, seconds=20)
+            print(last_fetched.replace(tzinfo=None), datetime.today() - timedelta(hours=1, seconds=20))
         if last_fetched is None or last_fetched.replace(tzinfo=None) < (datetime.today() - timedelta(hours=1, seconds=20)):
-            print 'Out of date'
+            print('Out of date')
             fetchset = VSuperSummaries.objects.using('grid').raw("SELECT Site, max(LatestEndTime) AS LatestPublish FROM VSuperSummaries WHERE Year=2019 GROUP BY 1;")
             for f in fetchset:
-                GridSite.objects.update_or_create(defaults={'updated': f.LatestPublish}, name=f.Site)
+                GridSiteSync.objects.update_or_create(defaults={'updated': f.LatestPublish}, name=f.Site)
         else:
-            print 'No need to update'
+            print('No need to update')
 
         response = super(GridSiteSyncViewSet, self).retrieve(request)
         date = response.data['updated'].replace(tzinfo=None)
