@@ -24,7 +24,6 @@ class GridSiteSerializer(serializers.HyperlinkedModelSerializer):
         )
 
         # Sitename substitutes for pk
-        lookup_field = 'SiteName'
         extra_kwargs = {
             'url': {'view_name': 'gridsite-detail', 'lookup_field': 'SiteName'}
         }
@@ -49,7 +48,6 @@ class GridSiteSyncSerializer(serializers.HyperlinkedModelSerializer):
         )
 
         # Sitename substitutes for pk
-        lookup_field = 'SiteName'
         extra_kwargs = {
             'url': {'view_name': 'gridsitesync-detail', 'lookup_field': 'SiteName'}
         }
@@ -72,7 +70,6 @@ class CloudSiteSerializer(serializers.HyperlinkedModelSerializer):
         )
 
         # Sitename substitutes for pk
-        lookup_field = 'SiteName'
         extra_kwargs = {
             'url': {'view_name': 'cloudsite-detail', 'lookup_field': 'SiteName'}
         }
