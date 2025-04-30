@@ -30,7 +30,7 @@
 
   {% for record in records %}
   <tr>
-    <td><a href="{% url 'gridsync_submithost'  SiteName=record.SiteName YearMonth=record.YearMonth %}">{{ record.YearMonth }}</a> </td>
+    <td><a href="{% url 'gridsync-submithost'  SiteName=record.SiteName YearMonth=record.YearMonth %}">{{ record.YearMonth }}</a> </td>
     <td>{{ record.RecordStart }}</td>
     <td>{{ record.RecordEnd }}</td>
     <td>{{ record.RecordCountPublished }}</td>

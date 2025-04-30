@@ -194,6 +194,7 @@ class GridSiteViewSet(viewsets.ReadOnlyModelViewSet):
 
         response = super(GridSiteViewSet, self).retrieve(request)
         date = response.data['updated'].replace(tzinfo=None)
+        response.data = update_dict_stdout_and_returncode(response.data, date)
 
         # Wrap data in a dict so that it can display in template.
         if type(request.accepted_renderer) is TemplateHTMLRenderer:
@@ -203,7 +204,6 @@ class GridSiteViewSet(viewsets.ReadOnlyModelViewSet):
                 'last_fetched': last_fetched
             }
 
-        response.data = update_dict_stdout_and_returncode(response.data, date)
         return response
 
 
