@@ -10,6 +10,7 @@ import pandas as pd
 from rest_framework import viewsets
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 
 
 from monitoring.publishing.models import (
@@ -172,10 +173,15 @@ class GridSiteViewSet(viewsets.ReadOnlyModelViewSet):
         return response
 
 
+class GridSiteSyncPagination(PageNumberPagination):
+    page_size = 1000 # Number of items to be fetched per page
+
+
 class GridSiteSyncViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = GridSiteSync.objects.all()
     serializer_class = GridSiteSyncSerializer
     lookup_field = 'SiteName'
+    pagination_class = GridSiteSyncPagination
 
     # When a single site is showed (retrieve function used), the template
     # is different than the one used when showing a list of sites
