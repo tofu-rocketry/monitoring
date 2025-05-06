@@ -5,7 +5,7 @@
 	<html xmlns="http://www.w3.org/1999/xhtml">
 		<head>
 			<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>APEL Publication Summary : {{ sites.0.name }}</title>
+<title>APEL Publication Summary</title>
                         <link href="{% static 'stylesheet.css' %}" rel="stylesheet" type="text/css" />
                         <link href="{% static 'style.css' %}" rel="stylesheet" type="text/css" />
 		</head>
@@ -19,19 +19,20 @@
 <li>lastBuild : {{ last_fetched|date:"Y-m-d H:i:s.u"|slice:":22" }}</ul><hr>
 
 <table>
-  <tr><th colspan='5' class='tableheader'>{{ sites.0.SiteName }}</td></tr>
   <tr>
     <th class='tableheader'>ExecutingSite</th>
     <th class='tableheader'>MeasurementDate</th>
     <th class='tableheader'>MeasurementTime</th>
     <th class='tableheader'>Publication <br> Status</th>
   </tr>
+  {% for site in sites %}
   <tr>
-    <td align='middle' class='tabletext'>{{ sites.0.SiteName }}</td>
-    <td align='middle' class='tabletext'>{{ last_fetched|date:"Y-m-d" }}</td>
-    <td align='middle' class='tabletext'>{{ last_fetched|date:"G:i:s" }}</td>
-    <td align='middle' class='tabletext'>{{ stdout }}</td>
+    <td align='middle' class='tabletext'>{{ site.SiteName }}</td>
+    <td align='middle' class='tabletext'>{{ site.updated|date:"Y-m-d" }}</td>
+    <td align='middle' class='tabletext'>{{ site.updated|date:"G:i:s" }}</td>
+    <td align='middle' class='tabletext'>{{ site.stdout }}</td>
   </tr>
+  {% endfor %}
 </table>
 
 </html>

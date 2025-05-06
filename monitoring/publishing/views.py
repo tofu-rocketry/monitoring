@@ -9,6 +9,7 @@ import pandas as pd
 
 from rest_framework import viewsets, generics
 from rest_framework.renderers import TemplateHTMLRenderer
+from rest_framework.response import Response
 
 from monitoring.publishing.models import (
     GridSite,
@@ -127,6 +128,7 @@ class GridSiteViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = GridSite.objects.all()
     serializer_class = GridSiteSerializer
     template_name = 'gridsites.html'
+    lookup_field = 'SiteName'
 
     def list(self, request):
         last_fetched = GridSite.objects.aggregate(Max('fetched'))['fetched__max']
@@ -166,7 +168,7 @@ class GridSiteViewSet(viewsets.ReadOnlyModelViewSet):
 
         return response
 
-    def retrieve(self, request, pk=None):
+    def retrieve(self, request, SiteName=None):
         last_fetched = GridSite.objects.aggregate(Max('fetched'))['fetched__max']
         # If there's no data then last_fetched is None.
         if last_fetched is not None:
@@ -178,7 +180,6 @@ class GridSiteViewSet(viewsets.ReadOnlyModelViewSet):
                     Site,
                     max(LatestEndTime) AS LatestPublish
                 FROM VSuperSummaries
-                WHERE Year=2019
                 GROUP BY 1;
             """
             fetchset = VSuperSummaries.objects.using('grid').raw(sql_query)
@@ -193,6 +194,7 @@ class GridSiteViewSet(viewsets.ReadOnlyModelViewSet):
 
         response = super(GridSiteViewSet, self).retrieve(request)
         date = response.data['updated'].replace(tzinfo=None)
+        response.data = update_dict_stdout_and_returncode(response.data, date)
 
         # Wrap data in a dict so that it can display in template.
         if type(request.accepted_renderer) is TemplateHTMLRenderer:
@@ -202,7 +204,6 @@ class GridSiteViewSet(viewsets.ReadOnlyModelViewSet):
                 'last_fetched': last_fetched
             }
 
-        response.data = update_dict_stdout_and_returncode(response.data, date)
         return response
 
 
@@ -313,7 +314,6 @@ class GridSiteSyncViewSet(viewsets.ReadOnlyModelViewSet):
         return response
 
     def retrieve(self, request, SiteName=None):
-        lookup_field = 'SiteName'
         last_fetched = GridSiteSync.objects.aggregate(Max('fetched'))['fetched__max']
         row_1 = GridSiteSync.objects.filter()[:1].get()
         n_sites = GridSiteSync.objects.values('SiteName').distinct().count()
@@ -400,12 +400,14 @@ class GridSiteSyncViewSet(viewsets.ReadOnlyModelViewSet):
         else:
             print('No need to update')
 
-        response = super(GridSiteSyncViewSet, self).list(request)
-        response.data = {
-            'records': response.data,
+        sites_list_qs = GridSiteSync.objects.filter(SiteName=SiteName)
+        sites_list_serializer = self.get_serializer(sites_list_qs, many=True)
+
+        response = {
+            'records': sites_list_serializer.data,
             'last_fetched': last_fetched
         }
-        return response
+        return Response(response)
 
 
 # Needed for passing two parameters to a viewset (GridSiteSyncSubmitHViewSet)
@@ -430,6 +432,7 @@ class GridSiteSyncSubmitHViewSet(MultipleFieldLookupMixin, viewsets.ReadOnlyMode
     queryset = GridSiteSyncSubmitH.objects.all()
     serializer_class = GridSiteSyncSubmitHSerializer
     template_name = 'gridsync_submithost.html'
+    lookup_fields = ('SiteName', 'YearMonth')
 
     def list(self, request):
         last_fetched = GridSiteSyncSubmitH.objects.aggregate(Max('fetched'))['fetched__max']
@@ -441,10 +444,8 @@ class GridSiteSyncSubmitHViewSet(MultipleFieldLookupMixin, viewsets.ReadOnlyMode
         return response
 
     def retrieve(self, request, SiteName=None, YearMonth=None):
-
-        lookup_fields = ('SiteName', 'YearMonth')
         last_fetched = GridSiteSyncSubmitH.objects.aggregate(Max('fetched'))['fetched__max']
-        Year, Month = YearMonth.replace('-', ' ').split(' ')
+        Year, Month = YearMonth.split('-')
         sitename_in_table = None
         yearmonth_in_table = None
 
@@ -514,6 +515,7 @@ class GridSiteSyncSubmitHViewSet(MultipleFieldLookupMixin, viewsets.ReadOnlyMode
                 right_on=['Site', 'Month', 'Year', 'SubmitHostSync'],
                 how='outer'
             )
+
             fetchset = df_all.to_dict('index')
 
             # This is to list only data for one month
@@ -549,6 +551,7 @@ class CloudSiteViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = CloudSite.objects.all()
     serializer_class = CloudSiteSerializer
     template_name = 'cloudsites.html'
+    lookup_field = 'SiteName'
 
     def list(self, request):
         last_fetched = CloudSite.objects.aggregate(Max('fetched'))['fetched__max']
@@ -600,7 +603,7 @@ class CloudSiteViewSet(viewsets.ReadOnlyModelViewSet):
             }
         return response
 
-    def retrieve(self, request, pk=None):
+    def retrieve(self, request, SiteName=None):
         last_fetched = CloudSite.objects.aggregate(Max('fetched'))['fetched__max']
         print(last_fetched.replace(tzinfo=None), datetime.today() - timedelta(hours=1, seconds=20))
         if last_fetched.replace(tzinfo=None) < (datetime.today() - timedelta(hours=1, seconds=20)):

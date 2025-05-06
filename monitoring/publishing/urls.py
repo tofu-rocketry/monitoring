@@ -1,5 +1,3 @@
-from django.conf.urls import include, url
-
 from rest_framework import routers
 
 from monitoring.publishing import views
@@ -9,18 +7,27 @@ router = routers.SimpleRouter()
 router.register(r'cloud', views.CloudSiteViewSet)
 router.register(r'grid', views.GridSiteViewSet)
 router.register(r'gridsync', views.GridSiteSyncViewSet)
-router.register(r'gridsync', views.GridSiteSyncSubmitHViewSet)
 
 urlpatterns = [
     re_path(
-        r'^gridsync/(?P<SiteName>[a-zA-Z0-9-]+)/$',
-        views.GridSiteSyncViewSet.as_view({'get': 'retrieve'}),
-        name='gridsync_singlesite'
+        r'^cloud/(?P<SiteName>[a-zA-Z0-9._-]+)/$',
+        views.CloudSiteViewSet.as_view({'get': 'retrieve'}),
+        name='cloudsite-detail'
     ),
     re_path(
-        r'^gridsync/(?P<SiteName>[a-zA-Z0-9-]+)/(?P<YearMonth>[0-9-]+)/$',
+        r'^grid/(?P<SiteName>[a-zA-Z0-9._-]+)/$',
+        views.GridSiteViewSet.as_view({'get': 'retrieve'}),
+        name='gridsite-detail'
+    ),
+    re_path(
+        r'^gridsync/(?P<SiteName>[a-zA-Z0-9._-]+)/$',
+        views.GridSiteSyncViewSet.as_view({'get': 'retrieve'}),
+        name='gridsitesync-detail'
+    ),
+    re_path(
+        r'^gridsync/(?P<SiteName>[a-zA-Z0-9._-]+)/(?P<YearMonth>[0-9-]+)/$',
         views.GridSiteSyncSubmitHViewSet.as_view({'get': 'retrieve'}),
-        name='gridsync_submithost'
+        name='gridsync-submithost'
     ),
 ]
 
