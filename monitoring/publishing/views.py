@@ -174,7 +174,7 @@ class GridSiteViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class GridSiteSyncPagination(PageNumberPagination):
-    page_size = 1000 # Number of items to be fetched per page
+    page_size = 1000  # Number of items to be fetched per page
 
 
 class GridSiteSyncViewSet(viewsets.ReadOnlyModelViewSet):
