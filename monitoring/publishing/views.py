@@ -104,18 +104,6 @@ def correct_dict(inpDict):
     return inpDict
 
 
-def determine_sync_status(f):
-    RecordCountPublished = f.get("RecordCountPublished")
-    RecordCountInDb = f.get("RecordCountInDb")
-    rel_diff1 = abs(RecordCountPublished - RecordCountInDb)/RecordCountInDb
-    rel_diff2 = abs(RecordCountPublished - RecordCountInDb)/RecordCountPublished
-    if rel_diff1 < 0.01 or rel_diff2 < 0.01:
-        syncstatus = "OK"
-    else:
-        syncstatus = "ERROR [ Please use the Gap Publisher to synchronise this dataset]"
-    return syncstatus
-
-
 # Combine Year and Month into one string (display purposes)
 def get_year_month_str(year, month):
     year_string = str(year)

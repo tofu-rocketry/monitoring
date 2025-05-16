@@ -40,7 +40,6 @@ from monitoring.publishing.views import (
     summaries_dict_standard,
     syncrecords_dict_standard,
     correct_dict,
-    determine_sync_status,
     fill_summaries_dict,
     fill_syncrecords_dict,
     get_year_month_str
@@ -66,6 +65,21 @@ logging.basicConfig(
 
 # set up the logger
 log = logging.getLogger(__name__)
+
+
+def determine_sync_status(f):
+    """
+    Helper to determine sync status between published and the database record counts.
+    """
+    RecordCountPublished = f.get("RecordCountPublished")
+    RecordCountInDb = f.get("RecordCountInDb")
+    rel_diff1 = abs(RecordCountPublished - RecordCountInDb)/RecordCountInDb
+    rel_diff2 = abs(RecordCountPublished - RecordCountInDb)/RecordCountPublished
+    if rel_diff1 < 0.01 or rel_diff2 < 0.01:
+        syncstatus = "OK"
+    else:
+        syncstatus = "ERROR [ Please use the Gap Publisher to synchronise this dataset]"
+    return syncstatus
 
 
 def refresh_gridsite():
@@ -211,6 +225,7 @@ def refresh_gridsitesync():
 
 
 if __name__ == "__main__":
+    log.info('=====================')
 
     refresh_gridsite()
     refresh_cloudsite()
@@ -220,3 +235,4 @@ if __name__ == "__main__":
         "Data retrieval and processing attempted. "
         "Check the above logs for details on the sync status"
     )
+    log.info('=====================')
