@@ -29,7 +29,7 @@
     <th class='tableheader'>Synchronisation <br/> Status</th>
   </tr>
 
-  {% for record in records %}
+  {% for record in records.results %}
   <tr>
     <td><a href="{% url 'gridsitesync-detail' SiteName=record.SiteName %}">{{ record.SiteName }}</td>
     <td>{{ record.YearMonth }}</a> </td>
