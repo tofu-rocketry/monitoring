@@ -89,6 +89,7 @@ def refresh_gridsite():
                 Site,
                 max(LatestEndTime) AS LatestPublish
             FROM VSuperSummaries
+            WHERE LatestEndTime > DATE_SUB(NOW(), INTERVAL 3 YEAR)
             GROUP BY 1;
         """
         fetchset = VSuperSummaries.objects.using('grid').raw(sql_query)
@@ -118,7 +119,7 @@ def refresh_cloudsite():
                     SiteName,
                     MAX(UpdateTime) AS latest
                 FROM VAnonCloudRecords
-                WHERE UpdateTime>'2023-01-01'
+                WHERE UpdateTime > DATE_SUB(NOW(), INTERVAL 3 YEAR)
                 GROUP BY SiteName
             )
             AS a
@@ -158,6 +159,7 @@ def refresh_gridsitesync():
                 MAX(LatestEndTime) AS RecordEnd
             FROM VSuperSummaries
             WHERE
+                Year >= YEAR(NOW()) - 3 AND
                 EarliestEndTime>'1900-01-01' AND
                 LatestEndTime>'1900-01-01'
             GROUP BY
@@ -172,6 +174,8 @@ def refresh_gridsitesync():
                 Year,
                 SUM(NumberOfJobs) AS RecordCountInDb
             FROM VSyncRecords
+            WHERE
+                Year >= YEAR(NOW()) - 3
             GROUP BY
                 Site, Year, Month;
         """
