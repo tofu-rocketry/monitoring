@@ -4,5 +4,5 @@ from __future__ import unicode_literals
 from django.apps import AppConfig
 
 
-class SychronisationConfig(AppConfig):
-    name = 'sychronisation'
+class SynchronisationConfig(AppConfig):
+    name = 'monitoring.synchronisation'
