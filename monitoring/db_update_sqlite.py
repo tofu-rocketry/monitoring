@@ -233,6 +233,38 @@ def refresh_gridsitesync():
     except DatabaseError:
         log.exception('Error while trying to refresh GridSiteSync')
 
+def refresh_BenchmarksBySubmitHost():
+    try:
+        sql_query = """
+            SELECT
+                Site,
+                SubmitHost,
+                ServiceLevelType,
+                ServiceLevel,
+                max(UpdateTime) AS LatestPublish
+            FROM VJobRecords
+            WHERE UpdateTime > DATE_SUB(NOW(), INTERVAL 2 MONTH)
+            GROUP BY 1;
+        """
+        fetchset = VJobRecords.objects.raw(sql_query)
+
+        for f in fetchset:
+            BenchmarksBySubmithost.objects.update_or_create(
+                defaults={
+                    'UpdateTime': f.LatestPublish,
+                    'SourceView': 'VJobRecords'
+                    },
+                SiteName=f.Site,
+                SubmitHost=f.SubmitHost,
+                ServiceLevelType=f.ServiceLevelType,
+                ServiceLevel=f.ServiceLevel,
+            )
+
+        log.info("Refreshed BenchmarksBySubmitHost")
+
+    except DatabaseError:
+        log.exception('Error while trying to refresh BenchmarksBySubmitHost')        
+
 
 def refresh_BenchmarksBySubmitHost():
     # views = ['VSummaries', 'VJobRecords', 'VNormalisedSummaries']
