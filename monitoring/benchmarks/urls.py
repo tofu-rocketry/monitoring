@@ -10,7 +10,7 @@ urlpatterns = [
     re_path(
         r'^benchmarks/(?P<SiteName>[a-zA-Z0-9._-]+)/$',
         views.BenchmarksViewSet.as_view({'get': 'retrieve'}),
-        name='site-benchmarks-detail'
+        name='benchmarksbysubmithost-list'
     ),
 ]
 
