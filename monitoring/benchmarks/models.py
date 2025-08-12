@@ -11,3 +11,36 @@ class BenchmarksBySubmithost(models.Model):
 
     class Meta:
         ordering = ('SiteName',)
+
+class VJobRecords(models.Model):
+    Site = models.CharField(max_length=255, primary_key=True)
+    SubmitHost = models.CharField(max_length=255)
+    ServiceLevelType = models.DecimalField(max_digits=10, decimal_places=3)
+    ServiceLevel = models.CharField(max_length=50)
+    UpdateTime = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'VJobRecords'
+
+class VSummaries(models.Model):
+    Site = models.CharField(max_length=255, primary_key=True)
+    SubmitHost = models.CharField(max_length=255)
+    ServiceLevelType = models.DecimalField(max_digits=10, decimal_places=3)
+    ServiceLevel = models.CharField(max_length=50)
+    UpdateTime = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'VSummaries'
+
+class VNormalisedSummaries(models.Model):
+    Site = models.CharField(max_length=255, primary_key=True)
+    SubmitHost = models.CharField(max_length=255)
+    ServiceLevelType = models.DecimalField(max_digits=10, decimal_places=3)
+    ServiceLevel = models.CharField(max_length=50)
+    UpdateTime = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'VNormalisedSummaries'                        
