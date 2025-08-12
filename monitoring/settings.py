@@ -76,6 +76,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'monitoring.publishing',
     'monitoring.availability',
+    'monitoring.benchmarks',
 ]
 
 REST_FRAMEWORK = {
