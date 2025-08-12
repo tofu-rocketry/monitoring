@@ -34,7 +34,7 @@ def update_dict_stdout_and_returncode(single_dict, date):
 class BenchmarksViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = BenchmarksBySubmithost.objects.all()
     serializer_class = BenchmarksBySubmithostSerializer
-    template_name = 'benchmarksbysubmithost.html'
+    template_name = 'benchmarks_by_submithost.html'
     lookup_field = 'SiteName'
 
     def list(self, request):

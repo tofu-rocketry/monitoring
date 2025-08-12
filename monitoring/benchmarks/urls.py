@@ -8,7 +8,7 @@ router.register('', views.BenchmarksViewSet)
 
 urlpatterns = [
     re_path(
-        r'/(?P<SiteName>[a-zA-Z0-9._-]+)/$',
+        r'^/(?P<SiteName>[a-zA-Z0-9._-]+)/$',
         views.BenchmarksViewSet.as_view({'get': 'retrieve'}),
         name='benchmarksbysubmithost-details'
     ),
