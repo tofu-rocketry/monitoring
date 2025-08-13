@@ -18,6 +18,7 @@ class VJobRecords(models.Model):
     ServiceLevelType = models.DecimalField(max_digits=10, decimal_places=3)
     ServiceLevel = models.CharField(max_length=50)
     UpdateTime = models.DateTimeField()
+    EndTime = models.DateTimeField()
 
     class Meta:
         managed = False

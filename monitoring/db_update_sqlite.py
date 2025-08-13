@@ -235,6 +235,19 @@ def refresh_gridsitesync():
 
 def refresh_BenchmarksBySubmitHost():
     try:
+        # sql_query = """
+        #     SELECT
+        #         Site,
+        #         SubmitHost,
+        #         ServiceLevelType,
+        #         ServiceLevel,
+        #         max(UpdateTime) AS LatestPublish
+        #     FROM VJobRecords
+        #     WHERE EndTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
+        #         AND UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
+        #     GROUP BY Site, SubmitHost;
+        # """
+        # fetchset = VJobRecords.objects.raw(sql_query)
         sql_query = """
             SELECT
                 Site,
@@ -242,17 +255,17 @@ def refresh_BenchmarksBySubmitHost():
                 ServiceLevelType,
                 ServiceLevel,
                 max(UpdateTime) AS LatestPublish
-            FROM VJobRecords
-            WHERE UpdateTime > DATE_SUB(NOW(), INTERVAL 2 MONTH)
-            GROUP BY 1;
+            FROM VSummaries
+            WHERE UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
+            GROUP BY Site, SubmitHost;
         """
-        fetchset = VJobRecords.objects.raw(sql_query)
+        fetchset = VSummaries.objects.raw(sql_query)
 
         for f in fetchset:
             BenchmarksBySubmithost.objects.update_or_create(
                 defaults={
                     'UpdateTime': f.LatestPublish,
-                    'SourceView': 'VJobRecords'
+                    'SourceView': 'VSummaries'
                     },
                 SiteName=f.Site,
                 SubmitHost=f.SubmitHost,
