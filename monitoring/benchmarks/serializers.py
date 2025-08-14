@@ -7,7 +7,7 @@ class BenchmarksBySubmithostSerializer(serializers.HyperlinkedModelSerializer):
     # Override default format with None so that Python datetime is used as
     # ouput format. Encoding will be determined by the renderer and can be
     # formatted by a template filter.
-    updated = serializers.DateTimeField(format=None)
+    UpdateTime = serializers.DateTimeField(format=None)
 
     class Meta:
         model = BenchmarksBySubmithost
