@@ -13,7 +13,7 @@ from django.db import DatabaseError
 import pandas as pd
 
 
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
 # Find the root and the Django project
 sys.path.append(BASE_DIR)
