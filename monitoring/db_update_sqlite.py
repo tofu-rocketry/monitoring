@@ -259,7 +259,7 @@ def refresh_BenchmarksBySubmitHost():
             WHERE UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
             GROUP BY Site, SubmitHost;
         """
-        fetchset = VSummaries.objects.raw(sql_query)
+        fetchset = VSummaries.objects.using('grid').raw(sql_query)
 
         for f in fetchset:
             BenchmarksBySubmithost.objects.update_or_create(
