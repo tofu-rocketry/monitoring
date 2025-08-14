@@ -52,7 +52,7 @@ class BenchmarksViewSet(viewsets.ReadOnlyModelViewSet):
 
         if type(request.accepted_renderer) is TemplateHTMLRenderer:
             response.data = {
-                'benchmark': final_response,
+                'benchmarks': final_response,
                 'last_fetched': last_fetched
             }
 
