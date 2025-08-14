@@ -4,8 +4,8 @@ class BenchmarksBySubmithost(models.Model):
     fetched = models.DateTimeField(auto_now=True)
     SiteName = models.CharField(max_length=255)
     SubmitHost = models.CharField(max_length=255)
-    ServiceLevelType = models.DecimalField(max_digits=10, decimal_places=3)
-    ServiceLevel = models.CharField(max_length=50)
+    ServiceLevelType = models.CharField(max_length=50)
+    ServiceLevel = models.DecimalField(max_digits=10, decimal_places=3)
     SourceView = models.CharField(max_length=50)
     UpdateTime = models.DateTimeField()
 
@@ -15,8 +15,8 @@ class BenchmarksBySubmithost(models.Model):
 class VJobRecords(models.Model):
     Site = models.CharField(max_length=255, primary_key=True)
     SubmitHost = models.CharField(max_length=255)
-    ServiceLevelType = models.DecimalField(max_digits=10, decimal_places=3)
-    ServiceLevel = models.CharField(max_length=50)
+    ServiceLevelType = models.CharField(max_length=50)
+    ServiceLevel = models.DecimalField(max_digits=10, decimal_places=3)
     UpdateTime = models.DateTimeField()
     EndTime = models.DateTimeField()
 
@@ -27,8 +27,8 @@ class VJobRecords(models.Model):
 class VSummaries(models.Model):
     Site = models.CharField(max_length=255, primary_key=True)
     SubmitHost = models.CharField(max_length=255)
-    ServiceLevelType = models.DecimalField(max_digits=10, decimal_places=3)
-    ServiceLevel = models.CharField(max_length=50)
+    ServiceLevelType = models.CharField(max_length=50)
+    ServiceLevel = models.DecimalField(max_digits=10, decimal_places=3)
     UpdateTime = models.DateTimeField()
 
     class Meta:
@@ -38,8 +38,8 @@ class VSummaries(models.Model):
 class VNormalisedSummaries(models.Model):
     Site = models.CharField(max_length=255, primary_key=True)
     SubmitHost = models.CharField(max_length=255)
-    ServiceLevelType = models.DecimalField(max_digits=10, decimal_places=3)
-    ServiceLevel = models.CharField(max_length=50)
+    ServiceLevelType = models.CharField(max_length=50)
+    ServiceLevel = models.DecimalField(max_digits=10, decimal_places=3)
     UpdateTime = models.DateTimeField()
 
     class Meta:
