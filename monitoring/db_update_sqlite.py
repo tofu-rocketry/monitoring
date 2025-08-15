@@ -242,8 +242,9 @@ def refresh_BenchmarksBySubmitHost():
 
 
 def refresh_BenchmarksBySubmitHost_from_view(view_name):
-    try:
-        sql_query = f"""
+    try:        
+        if view_name == 'VSummaries':
+            sql_query = f"""
             SELECT
                 Site,
                 SubmitHost,
@@ -254,6 +255,33 @@ def refresh_BenchmarksBySubmitHost_from_view(view_name):
             WHERE UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
             GROUP BY Site, SubmitHost;
         """
+        elif view_name == 'VJobRecords':
+            sql_query = f"""
+            SELECT
+                Site,
+                SubmitHost,
+                ServiceLevelType,
+                ServiceLevel,
+                max(UpdateTime) AS LatestPublish
+            FROM {view_name}
+            WHERE UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
+            GROUP BY Site, SubmitHost;
+        """
+        elif view_name == 'VNormalisedSummaries':
+            sql_query = f"""
+            SELECT
+                Site,
+                SubmitHost,
+                ServiceLevelType,
+                CpuDuration AS ServiceLevel,
+                max(UpdateTime) AS LatestPublish
+            FROM {view_name}
+            WHERE UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
+            GROUP BY Site, SubmitHost;
+        """
+        else:
+            log.warning(f"Unknown view name: {view_name}")
+            return
 
         # Dynamically get the model class from globals
         model_class = globals()[view_name]

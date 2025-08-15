@@ -26,16 +26,11 @@ class BenchmarksViewSet(viewsets.ReadOnlyModelViewSet):
         if last_fetched is not None:
             print(last_fetched.replace(tzinfo=None), datetime.today() - timedelta(hours=1, seconds=20))
 
-        final_response = []
         response = super(BenchmarksViewSet, self).list(request)
-
-        for single_dict in response.data:
-            date = single_dict.get('UpdateTime').replace(tzinfo=None)
-            final_response.append(date)
 
         if type(request.accepted_renderer) is TemplateHTMLRenderer:
             response.data = {
-                'benchmarks': final_response,
+                'benchmarks': response.data,
                 'last_fetched': last_fetched
             }
 
@@ -47,19 +42,13 @@ class BenchmarksViewSet(viewsets.ReadOnlyModelViewSet):
         if last_fetched is not None:
             print(last_fetched.replace(tzinfo=None), datetime.today() - timedelta(hours=1, seconds=20))
         
-        final_response = []
         sites_list_qs = BenchmarksBySubmithost.objects.filter(SiteName=SiteName)
         sites_list_serializer = self.get_serializer(sites_list_qs, many=True)
         
-        for single_dict in sites_list_serializer.data:
-            date = single_dict.get('UpdateTime').replace(tzinfo=None)
-            final_response.append(date)
-
         # Wrap data in a dict so that it can display in template.
         if type(request.accepted_renderer) is TemplateHTMLRenderer:
-            # Single result put in list to work with same HTML template.
             response = {
-                'benchmarks': final_response,
+                'benchmarks': sites_list_serializer,
                 'last_fetched': last_fetched
             }
 
