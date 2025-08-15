@@ -273,10 +273,11 @@ def refresh_BenchmarksBySubmitHost_from_view(view_name):
                 Site,
                 SubmitHost,
                 ServiceLevelType,
-                CpuDuration AS ServiceLevel,
+                (NormalisedWallDuration / WallDuration) AS ServiceLevel,
                 max(UpdateTime) AS LatestPublish
             FROM {view_name}
             WHERE UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
+                  AND WallDuration > 0
             GROUP BY Site, SubmitHost;
         """
         else:
