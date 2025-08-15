@@ -233,50 +233,48 @@ def refresh_gridsitesync():
     except DatabaseError:
         log.exception('Error while trying to refresh GridSiteSync')
 
+
 def refresh_BenchmarksBySubmitHost():
+    # views = ['VSummaries', 'VJobRecords', 'VNormalisedSummaries']
+    views = ['VSummaries', 'VNormalisedSummaries']
+    for view in views:
+        refresh_BenchmarksBySubmitHost_from_view(view)
+
+
+def refresh_BenchmarksBySubmitHost_from_view(view_name):
     try:
-        # sql_query = """
-        #     SELECT
-        #         Site,
-        #         SubmitHost,
-        #         ServiceLevelType,
-        #         ServiceLevel,
-        #         max(UpdateTime) AS LatestPublish
-        #     FROM VJobRecords
-        #     WHERE EndTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
-        #         AND UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
-        #     GROUP BY Site, SubmitHost;
-        # """
-        # fetchset = VJobRecords.objects.raw(sql_query)
-        sql_query = """
+        sql_query = f"""
             SELECT
                 Site,
                 SubmitHost,
                 ServiceLevelType,
                 ServiceLevel,
                 max(UpdateTime) AS LatestPublish
-            FROM VSummaries
+            FROM {view_name}
             WHERE UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
             GROUP BY Site, SubmitHost;
         """
-        fetchset = VSummaries.objects.using('grid').raw(sql_query)
+
+        # Dynamically get the model class from globals
+        model_class = globals()[view_name]
+        fetchset = model_class.objects.using('grid').raw(sql_query)
 
         for f in fetchset:
             BenchmarksBySubmithost.objects.update_or_create(
                 defaults={
                     'UpdateTime': f.LatestPublish,
-                    'SourceView': 'VSummaries'
-                    },
+                    'SourceView': view_name
+                },
                 SiteName=f.Site,
                 SubmitHost=f.SubmitHost,
                 ServiceLevelType=f.ServiceLevelType,
                 ServiceLevel=f.ServiceLevel,
             )
 
-        log.info("Refreshed BenchmarksBySubmitHost")
+        log.info(f"Refreshed BenchmarksBySubmitHost from {view_name}")
 
-    except DatabaseError:
-        log.exception('Error while trying to refresh BenchmarksBySubmitHost')        
+    except Exception:
+        log.exception(f'Error while trying to refresh BenchmarksBySubmitHost from {view_name}')      
 
 
 def refresh_BenchmarksBySubmitHost():
