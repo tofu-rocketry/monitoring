@@ -19,8 +19,3 @@ class BenchmarksBySubmithostSerializer(serializers.HyperlinkedModelSerializer):
             'SourceView',
             'UpdateTime',
         )
-
-        # Sitename substitutes for pk
-        extra_kwargs = {
-            'url': {'view_name': 'benchmarksbysubmithost-details', 'lookup_field': 'SiteName'}
-        }

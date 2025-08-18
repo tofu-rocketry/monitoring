@@ -23,6 +23,7 @@ class VJobRecords(models.Model):
     class Meta:
         managed = False
         db_table = 'VJobRecords'
+        verbose_name = 'Job Record'
 
 class VSummaries(models.Model):
     Site = models.CharField(max_length=255, primary_key=True)
@@ -34,6 +35,7 @@ class VSummaries(models.Model):
     class Meta:
         managed = False
         db_table = 'VSummaries'
+        verbose_name = 'Summary'
 
 class VNormalisedSummaries(models.Model):
     Site = models.CharField(max_length=255, primary_key=True)
@@ -44,4 +46,5 @@ class VNormalisedSummaries(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'VNormalisedSummaries'                        
+        db_table = 'VNormalisedSummaries'
+        verbose_name = 'Normalised Summary'                        
