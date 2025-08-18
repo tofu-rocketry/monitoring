@@ -1,9 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-<head><meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
-</head>
 
 <head>
+  <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
   <title>Sites publishing benchmark records</title>
 </head>
 
@@ -12,7 +11,12 @@
   <p>Page last updated: {{ last_fetched|date:"Y-m-d H:i:s.u" }}</p>
   <table border="1">
     <tr>
-      <th>Site</th><th>Submit host</th><th>Service level type</th><th>Service level</th><th>Source view</th><th>Last updated</th>
+      <th>Site</th>
+      <th>Submit host</th>
+      <th>Service level type</th>
+      <th>Service level</th>
+      <th>Source view</th>
+      <th>Last updated</th>
     </tr>
     {% for benchmark in benchmarks %}
     <tr>
@@ -26,3 +30,5 @@
     {% endfor %}
   </table>
 </body>
+
+</html>
