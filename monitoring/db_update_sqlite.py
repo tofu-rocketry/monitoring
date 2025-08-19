@@ -46,7 +46,12 @@ from monitoring.publishing.views import (
     get_year_month_str
 )
 
-from monitoring.benchmarks.models import BenchmarksBySubmithost 
+from monitoring.benchmarks.models import (
+    BenchmarksBySubmithost,
+    VJobRecords,
+    VSummaries,
+    VNormalisedSummaries,
+) 
 
 try:
     # Read configuration from the file
