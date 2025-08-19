@@ -11,6 +11,7 @@ import sys
 import django
 from django.db import DatabaseError
 import pandas as pd
+from django.utils.timezone import make_aware, is_naive
 
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -45,12 +46,7 @@ from monitoring.publishing.views import (
     get_year_month_str
 )
 
-from monitoring.benchmarks.models import (
-    BenchmarksBySubmithost,
-    VJobRecords,
-    VSummaries,
-    VNormalisedSummaries,
-)    
+from monitoring.benchmarks.models import BenchmarksBySubmithost 
 
 try:
     # Read configuration from the file
@@ -235,8 +231,7 @@ def refresh_gridsitesync():
 
 
 def refresh_BenchmarksBySubmitHost():
-    # views = ['VSummaries', 'VJobRecords', 'VNormalisedSummaries']
-    views = ['VSummaries', 'VNormalisedSummaries']
+    views = ['VSummaries', 'VJobRecords', 'VNormalisedSummaries']
     for view in views:
         refresh_BenchmarksBySubmitHost_from_view(view)
 
@@ -264,7 +259,8 @@ def refresh_BenchmarksBySubmitHost_from_view(view_name):
                 ServiceLevel,
                 max(UpdateTime) AS LatestPublish
             FROM {view_name}
-            WHERE UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
+            WHERE EndTime > DATE_SUB(NOW(), INTERVAL 3 MONTH) 
+                  AND UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
             GROUP BY Site, SubmitHost;
         """
         elif view_name == 'VNormalisedSummaries':
@@ -291,7 +287,7 @@ def refresh_BenchmarksBySubmitHost_from_view(view_name):
         for f in fetchset:
             BenchmarksBySubmithost.objects.update_or_create(
                 defaults={
-                    'UpdateTime': f.LatestPublish,
+                    'UpdateTime': make_aware(f.LatestPublish) if is_naive(f.LatestPublish) else f.LatestPublish,
                     'SourceView': model_class._meta.verbose_name
                 },
                 SiteName=f.Site,
@@ -303,79 +299,7 @@ def refresh_BenchmarksBySubmitHost_from_view(view_name):
         log.info(f"Refreshed BenchmarksBySubmitHost from {view_name}")
 
     except Exception:
-        log.exception(f'Error while trying to refresh BenchmarksBySubmitHost from {view_name}')      
-
-
-def refresh_BenchmarksBySubmitHost():
-    # views = ['VSummaries', 'VJobRecords', 'VNormalisedSummaries']
-    views = ['VSummaries', 'VNormalisedSummaries']
-    for view in views:
-        refresh_BenchmarksBySubmitHost_from_view(view)
-
-
-def refresh_BenchmarksBySubmitHost_from_view(view_name):
-    try:        
-        if view_name == 'VSummaries':
-            sql_query = f"""
-            SELECT
-                Site,
-                SubmitHost,
-                ServiceLevelType,
-                ServiceLevel,
-                max(UpdateTime) AS LatestPublish
-            FROM {view_name}
-            WHERE UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
-            GROUP BY Site, SubmitHost;
-        """
-        elif view_name == 'VJobRecords':
-            sql_query = f"""
-            SELECT
-                Site,
-                SubmitHost,
-                ServiceLevelType,
-                ServiceLevel,
-                max(UpdateTime) AS LatestPublish
-            FROM {view_name}
-            WHERE UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
-            GROUP BY Site, SubmitHost;
-        """
-        elif view_name == 'VNormalisedSummaries':
-            sql_query = f"""
-            SELECT
-                Site,
-                SubmitHost,
-                ServiceLevelType,
-                (NormalisedWallDuration / WallDuration) AS ServiceLevel,
-                max(UpdateTime) AS LatestPublish
-            FROM {view_name}
-            WHERE UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
-                  AND WallDuration > 0
-            GROUP BY Site, SubmitHost;
-        """
-        else:
-            log.warning(f"Unknown view name: {view_name}")
-            return
-
-        # Dynamically get the model class from globals
-        model_class = globals()[view_name]
-        fetchset = model_class.objects.using('grid').raw(sql_query)
-
-        for f in fetchset:
-            BenchmarksBySubmithost.objects.update_or_create(
-                defaults={
-                    'UpdateTime': f.LatestPublish,
-                    'SourceView': view_name
-                },
-                SiteName=f.Site,
-                SubmitHost=f.SubmitHost,
-                ServiceLevelType=f.ServiceLevelType,
-                ServiceLevel=f.ServiceLevel,
-            )
-
-        log.info(f"Refreshed BenchmarksBySubmitHost from {view_name}")
-
-    except Exception:
-        log.exception(f'Error while trying to refresh BenchmarksBySubmitHost from {view_name}')      
+        log.exception(f'Error while trying to refresh BenchmarksBySubmitHost from {view_name}') 
 
 
 if __name__ == "__main__":
@@ -390,4 +314,4 @@ if __name__ == "__main__":
         "Data retrieval and processing attempted. "
         "Check the above logs for details on the sync status"
     )
-    log.info('=====================')
+    log.info('=====================')    
