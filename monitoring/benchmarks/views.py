@@ -15,7 +15,6 @@ class BenchmarksViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = BenchmarksBySubmithost.objects.all()
     serializer_class = BenchmarksBySubmithostSerializer
     template_name = 'benchmarks_by_submithost.html'
-    lookup_field = 'SiteName'
 
     def list(self, request):
         last_fetched = BenchmarksBySubmithost.objects.aggregate(Max('fetched'))['fetched__max']
