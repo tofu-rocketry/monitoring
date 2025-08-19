@@ -319,4 +319,4 @@ if __name__ == "__main__":
         "Data retrieval and processing attempted. "
         "Check the above logs for details on the sync status"
     )
-    log.info('=====================')    
+    log.info('=====================')

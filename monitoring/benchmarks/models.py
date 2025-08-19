@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class BenchmarksBySubmithost(models.Model):
     fetched = models.DateTimeField(auto_now=True)
     SiteName = models.CharField(max_length=255)
@@ -11,6 +12,7 @@ class BenchmarksBySubmithost(models.Model):
 
     class Meta:
         ordering = ('SiteName',)
+
 
 class VJobRecords(models.Model):
     Site = models.CharField(max_length=255, primary_key=True)
@@ -25,6 +27,7 @@ class VJobRecords(models.Model):
         db_table = 'VJobRecords'
         verbose_name = 'Job Record'
 
+
 class VSummaries(models.Model):
     Site = models.CharField(max_length=255, primary_key=True)
     SubmitHost = models.CharField(max_length=255)
@@ -36,6 +39,7 @@ class VSummaries(models.Model):
         managed = False
         db_table = 'VSummaries'
         verbose_name = 'Summary'
+
 
 class VNormalisedSummaries(models.Model):
     Site = models.CharField(max_length=255, primary_key=True)
