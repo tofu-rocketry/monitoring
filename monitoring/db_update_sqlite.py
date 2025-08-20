@@ -304,7 +304,7 @@ def refresh_BenchmarksBySubmitHost_from_view(view_name):
         log.info(f"Refreshed BenchmarksBySubmitHost from {view_name}")
 
     except Exception:
-        log.exception(f'Error while trying to refresh BenchmarksBySubmitHost from {view_name}') 
+        log.exception(f'Error while trying to refresh BenchmarksBySubmitHost from {view_name}')
 
 
 if __name__ == "__main__":

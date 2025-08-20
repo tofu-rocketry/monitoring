@@ -51,4 +51,4 @@ class VNormalisedSummaries(models.Model):
     class Meta:
         managed = False
         db_table = 'VNormalisedSummaries'
-        verbose_name = 'Normalised Summary'                        
+        verbose_name = 'Normalised Summary'
