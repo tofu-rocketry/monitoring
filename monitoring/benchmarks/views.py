@@ -2,6 +2,7 @@ from django.shortcuts import render
 from datetime import datetime, timedelta
 
 from django.db.models import Max
+from django.db.models.functions import Lower
 
 from rest_framework import viewsets
 from rest_framework.renderers import TemplateHTMLRenderer
@@ -12,7 +13,8 @@ from monitoring.benchmarks.models import BenchmarksBySubmithost
 from monitoring.benchmarks.serializers import BenchmarksBySubmithostSerializer
 
 class BenchmarksViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = BenchmarksBySubmithost.objects.all()
+    queryset = BenchmarksBySubmithost.objects.all().annotate(site_name_lower=Lower('SiteName')).order_by('site_name_lower')
+
     serializer_class = BenchmarksBySubmithostSerializer
     template_name = 'benchmarks_by_submithost.html'
 
