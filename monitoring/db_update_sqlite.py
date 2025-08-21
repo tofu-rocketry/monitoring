@@ -51,7 +51,7 @@ from monitoring.benchmarks.models import (
     VJobRecords,
     VSummaries,
     VNormalisedSummaries,
-) 
+)
 
 try:
     # Read configuration from the file
@@ -242,7 +242,7 @@ def refresh_BenchmarksBySubmitHost():
 
 
 def refresh_BenchmarksBySubmitHost_from_view(view_name):
-    try:        
+    try:
         if view_name == 'VSummaries':
             sql_query = f"""
             SELECT
@@ -264,7 +264,7 @@ def refresh_BenchmarksBySubmitHost_from_view(view_name):
                 ServiceLevel,
                 max(UpdateTime) AS LatestPublish
             FROM {view_name}
-            WHERE EndTime > DATE_SUB(NOW(), INTERVAL 3 MONTH) 
+            WHERE EndTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
                   AND UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
             GROUP BY Site, SubmitHost;
         """
