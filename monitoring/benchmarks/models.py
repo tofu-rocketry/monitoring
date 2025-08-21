@@ -5,9 +5,9 @@ class BenchmarksBySubmithost(models.Model):
     fetched = models.DateTimeField(auto_now=True)
     SiteName = models.CharField(max_length=255)
     SubmitHost = models.CharField(max_length=255)
-    ServiceLevelType = models.CharField(max_length=50)
-    ServiceLevel = models.DecimalField(max_digits=10, decimal_places=3)
-    SourceView = models.CharField(max_length=50)
+    BenchmarkType = models.CharField(max_length=50)
+    BenchmarkValue = models.DecimalField(max_digits=10, decimal_places=3)
+    RecordType = models.CharField(max_length=50)
     UpdateTime = models.DateTimeField()
 
     class Meta:

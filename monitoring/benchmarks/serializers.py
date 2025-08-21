@@ -14,8 +14,8 @@ class BenchmarksBySubmithostSerializer(serializers.HyperlinkedModelSerializer):
         fields = (
             'SiteName',
             'SubmitHost',
-            'ServiceLevelType',
-            'ServiceLevel',
-            'SourceView',
+            'BenchmarkType',
+            'BenchmarkValue',
+            'RecordType',
             'UpdateTime',
         )

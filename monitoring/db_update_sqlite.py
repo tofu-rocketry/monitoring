@@ -293,12 +293,12 @@ def refresh_BenchmarksBySubmitHost_from_view(view_name):
             BenchmarksBySubmithost.objects.update_or_create(
                 defaults={
                     'UpdateTime': make_aware(f.LatestPublish) if is_naive(f.LatestPublish) else f.LatestPublish,
-                    'SourceView': model_class._meta.verbose_name
+                    'RecordType': model_class._meta.verbose_name
                 },
                 SiteName=f.Site,
                 SubmitHost=f.SubmitHost,
-                ServiceLevelType=f.ServiceLevelType,
-                ServiceLevel=f.ServiceLevel,
+                BenchmarkType=f.ServiceLevelType,
+                BenchmarkValue=f.ServiceLevel,
             )
 
         log.info(f"Refreshed BenchmarksBySubmitHost from {view_name}")
