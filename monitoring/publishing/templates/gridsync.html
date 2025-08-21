@@ -33,8 +33,8 @@
 
   {% for record in records.results %}
   <tr>
-    <td><a href="{% url 'gridsitesync-detail' SiteName=record.SiteName %}">{{ record.SiteName }}</td>
-    <td>{{ record.YearMonth }}</a> </td>
+    <td><a href="{% url 'gridsitesync-detail' SiteName=record.SiteName %}">{{ record.SiteName }}</a></td>
+    <td>{{ record.YearMonth }}</td>
     <td>{{ record.RecordStart }}</td>
     <td>{{ record.RecordEnd }}</td>
     <td>{{ record.RecordCountPublished }}</td>
