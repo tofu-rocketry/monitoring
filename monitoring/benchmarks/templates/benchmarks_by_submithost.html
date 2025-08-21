@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<head>
+  <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+  <title>Sites publishing benchmark records</title>
+</head>
+
+<body>
+  <h2>Sites publishing benchmark records in last 3 months</h2>
+  <p>Page last updated: {{ last_fetched|date:"Y-m-d H:i:s.u" }}</p>
+  <table border="1">
+    <tr>
+      <th>Site</th>
+      <th>Submit host</th>
+      <th>Benchmark type</th>
+      <th>Benchmark value</th>
+      <th>Record type</th>
+      <th>Last updated</th>
+    </tr>
+    {% for benchmark in benchmarks %}
+    <tr>
+      <td>{{ benchmark.SiteName }}</td>
+      <td>{{ benchmark.SubmitHost }}</td>
+      <td>{{ benchmark.BenchmarkType }}</td>
+      <td>{{ benchmark.BenchmarkValue }}</td>
+      <td>{{ benchmark.RecordType }}</td>
+      <td>{{ benchmark.UpdateTime|date:"Y-m-d H:i:s" }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</body>
+
+</html>
