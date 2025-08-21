@@ -13,7 +13,7 @@ from monitoring.benchmarks.models import BenchmarksBySubmithost
 from monitoring.benchmarks.serializers import BenchmarksBySubmithostSerializer
 
 class BenchmarksViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = BenchmarksBySubmithost.objects.all().annotate(site_name_lower=Lower('SiteName')).order_by('site_name_lower')
+    queryset = BenchmarksBySubmithost.objects.all().order_by(Lower('SiteName'))
 
     serializer_class = BenchmarksBySubmithostSerializer
     template_name = 'benchmarks_by_submithost.html'
