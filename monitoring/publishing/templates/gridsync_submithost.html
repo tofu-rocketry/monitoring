@@ -32,12 +32,12 @@
 
   {% for host in submisthosts %}
   <tr>
-    <td>{{ host.YearMonth }} </td>
-    <td>{{ host.SubmitHost }}</td>
-    <td>{{ host.RecordStart }}</td>
-    <td>{{ host.RecordEnd }}</td>
-    <td>{{ host.RecordCountPublished }}</td>
-    <td>{{ host.RecordCountInDb }}</td>
+    <td class='tabletext'>{{ host.YearMonth }} </td>
+    <td class='tabletext'>{{ host.SubmitHost }}</td>
+    <td class='tabletext'>{{ host.RecordStart }}</td>
+    <td class='tabletext'>{{ host.RecordEnd }}</td>
+    <td class='tabletext'>{{ host.RecordCountPublished }}</td>
+    <td class='tabletext'>{{ host.RecordCountInDb }}</td>
   </tr>
   {% endfor %}
 </table>

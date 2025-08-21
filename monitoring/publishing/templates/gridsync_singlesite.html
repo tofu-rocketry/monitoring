@@ -27,17 +27,19 @@
     <th class='tableheader'>Record End</th>
     <th class='tableheader'>Record Count <br/> In Your Database</th>
     <th class='tableheader'>Record Count <br/> What You Published</th>
-    <th class='tableheader'>Synchronisation <br/> Status</th>
+    <th class='tableheader'>Synchronisation Status</th>
   </tr>
 
   {% for record in records %}
   <tr>
-    <td><a href="{% url 'gridsync-submithost'  SiteName=record.SiteName YearMonth=record.YearMonth %}">{{ record.YearMonth }}</a> </td>
-    <td>{{ record.RecordStart }}</td>
-    <td>{{ record.RecordEnd }}</td>
-    <td>{{ record.RecordCountPublished }}</td>
-    <td>{{ record.RecordCountInDb }}</td>
-    <td>{{ record.SyncStatus }}</td>
+    <td class='tabletext'>
+      <a href="{% url 'gridsync-submithost'  SiteName=record.SiteName YearMonth=record.YearMonth %}">{{ record.YearMonth }}</a>
+    </td>
+    <td class='tabletext'>{{ record.RecordStart }}</td>
+    <td class='tabletext'>{{ record.RecordEnd }}</td>
+    <td class='tabletext'>{{ record.RecordCountPublished }}</td>
+    <td class='tabletext'>{{ record.RecordCountInDb }}</td>
+    <td class='tabletext'>{{ record.SyncStatus }}</td>
   </tr>
   {% endfor %}
 </table>
