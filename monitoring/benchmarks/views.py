@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from datetime import datetime, timedelta
 
-from django.db.models import Max
+from django.db.models import Max, Count
 from django.db.models.functions import Lower
 
 from rest_framework import viewsets
@@ -25,10 +25,19 @@ class BenchmarksViewSet(viewsets.ReadOnlyModelViewSet):
 
         response = super(BenchmarksViewSet, self).list(request)
 
+        # Count number of distinct sites per RecordType
+        site_counts_by_record_type = (
+            BenchmarksBySubmithost.objects
+            .values('RecordType')
+            .annotate(site_count=Count('SiteName', distinct=True))
+            .order_by('RecordType')
+        )
+
         if type(request.accepted_renderer) is TemplateHTMLRenderer:
             response.data = {
                 'benchmarks': response.data,
-                'last_fetched': last_fetched
+                'last_fetched': last_fetched,
+                'site_counts_by_record_type': site_counts_by_record_type
             }
 
         return response

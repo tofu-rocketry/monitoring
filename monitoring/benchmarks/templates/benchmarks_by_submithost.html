@@ -11,6 +11,19 @@
   <p>Page last updated: {{ last_fetched|date:"Y-m-d H:i:s.u" }}</p>
   <table border="1">
     <tr>
+      <th>Record type</th>
+      <th>Number of Sites</th>
+    </tr>
+    {% for item in site_counts_by_record_type %}
+    <tr>
+        <td>{{ item.RecordType }}</td>
+        <td>{{ item.site_count }}</td>
+    </tr>
+     {% endfor %}
+  </table>
+
+  <table border="1">
+    <tr>
       <th>Site</th>
       <th>Submit host</th>
       <th>Benchmark type</th>
