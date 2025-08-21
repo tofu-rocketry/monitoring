@@ -1,4 +1,5 @@
 {% load static %}
+{% load humanize %}
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -36,8 +37,8 @@
     <td class='tabletext'>{{ host.SubmitHost }}</td>
     <td class='tabletext'>{{ host.RecordStart }}</td>
     <td class='tabletext'>{{ host.RecordEnd }}</td>
-    <td class='tabletext'>{{ host.RecordCountPublished }}</td>
-    <td class='tabletext'>{{ host.RecordCountInDb }}</td>
+    <td class='tabletext'>{{ host.RecordCountPublished|intcomma }}</td>
+    <td class='tabletext'>{{ host.RecordCountInDb|intcomma }}</td>
   </tr>
   {% endfor %}
 </table>
