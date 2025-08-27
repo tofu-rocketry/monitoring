@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>APEL Data Validation</h1>
+<p>Welcome. This page gives an overview of the views available in the APEL Data Validation system.</p>
+
+<h2>EGI/WLCG Grid Accounting</h2>
+<ul>
+    <li><a href="{% url 'gridsite-list' %}">{% url 'gridsite-list' %}</a> - An overview of when grid sites last published.</li>
+    <li>{% url 'gridsitesync-list' %}SITENAME/ - A view showing the synchronisation status of an individual site.
+        For example: <a href="{% url 'gridsitesync-detail' 'RAL-LCG2' %}">{% url 'gridsitesync-detail' 'RAL-LCG2' %}</a>
+    </li>
+    <li><a href="{% url 'benchmarksbysubmithost-list' %}">{% url 'benchmarksbysubmithost-list' %}</a> - An overview of the
+        latest benchmark and record type published for each submit host at all grid sites.
+    </li>
+</ul>
+
+<h2>EGI Cloud Accounting</h2>
+<p><ul><li>
+    <a href="{% url 'cloudsite-list' %}">{% url 'cloudsite-list' %}</a> - An overview of when cloud
+    sites last published and what accounting script they are using.
+</li></ul></p>
+
+<h2>Return format</h2>
+<p>
+    The views above return HTML by default, but can be set to return JSON by adding <code>?format=json</code> at the end of the URL.
+    For example: <a href="{% url 'gridsitesync-detail' 'RAL-LCG2' %}?format=json">{% url 'gridsitesync-detail' 'RAL-LCG2' %}?format=json</a>
+</p>
+
+</body>
+</html>

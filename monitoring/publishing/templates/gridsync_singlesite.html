@@ -1,21 +1,24 @@
 {% load static %}
+{% load humanize %}
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-	<html xmlns="http://www.w3.org/1999/xhtml">
-		<head>
-			<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-      <title>APEL Publication Summary </title>
-      <link href="{% static 'stylesheet.css' %}" rel="stylesheet" type="text/css" />
-      <link href="{% static 'style.css' %}" rel="stylesheet" type="text/css" />
-		</head>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <title>APEL Publication Summary</title>
+  <link href="{% static 'stylesheet.css' %}" rel="stylesheet" type="text/css" />
+  <link href="{% static 'style.css' %}" rel="stylesheet" type="text/css" />
+</head>
 <body>
 <h3>APEL Synchronisation Test</h3>
 <ul>
- <li> A comparison is made between your local APEL database, and the data that you have published to the GOC.
- <li> Major differences are flagged with FAIL.
- <li> Information about APEL <a href='https://wiki.egi.eu/wiki/APEL'>APEL Wiki</a>
- <li> Contact: apel-admins [at] stfc.ac.uk
-<li>lastBuild : {{ last_fetched|date:"Y-m-d H:i:s.u"|slice:":22" }}</ul><hr>
+  <li> A comparison is made between your local accounting, and the data that you have published to APEL.
+  <li> Major differences are flagged with FAIL.
+  <li> Information about APEL: <a href='https://docs.egi.eu/providers/operations-manuals/man09_accounting_data_publishing/'>EGI Documentation</a>
+  <li> Data last fetched: {{ last_fetched|date:"c"|slice:":22" }}
+</ul>
+
+<hr>
 
 <table>
   <tr><th colspan='6' class='tableheader'> {{ records.0.SiteName }} </td></tr>
@@ -25,19 +28,21 @@
     <th class='tableheader'>Record End</th>
     <th class='tableheader'>Record Count <br/> In Your Database</th>
     <th class='tableheader'>Record Count <br/> What You Published</th>
-    <th class='tableheader'>Synchronisation <br/> Status</th>
+    <th class='tableheader'>Synchronisation Status</th>
   </tr>
 
   {% for record in records %}
   <tr>
-    <td><a href="{% url 'gridsync-submithost'  SiteName=record.SiteName YearMonth=record.YearMonth %}">{{ record.YearMonth }}</a> </td>
-    <td>{{ record.RecordStart }}</td>
-    <td>{{ record.RecordEnd }}</td>
-    <td>{{ record.RecordCountPublished }}</td>
-    <td>{{ record.RecordCountInDb }}</td>
-    <td>{{ record.SyncStatus  }}</td>
-
+    <td class='tabletext'>
+      <a href="{% url 'gridsync-submithost'  SiteName=record.SiteName YearMonth=record.YearMonth %}">{{ record.YearMonth }}</a>
+    </td>
+    <td class='tabletext'>{{ record.RecordStart }}</td>
+    <td class='tabletext'>{{ record.RecordEnd }}</td>
+    <td class='tabletext'>{{ record.RecordCountPublished|intcomma }}</td>
+    <td class='tabletext'>{{ record.RecordCountInDb|intcomma }}</td>
+    <td class='tabletext'>{{ record.SyncStatus }}</td>
   </tr>
   {% endfor %}
-
 </table>
+
+</html>

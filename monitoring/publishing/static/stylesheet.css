@@ -32,7 +32,7 @@ th {
         font-size: 12px;
         color: #009999;
     background-color: #FFFFFF;
-        font-weight: bold
+        font-weight: bold;
     align: left;
 }
 a:link {
@@ -65,7 +65,7 @@ hr      {
 }
 .navbar-title {
         font-family: Arial, Helvetica, sans-serif;
-        font-size: 0.8em;
+        font-size: 1em;
         color: #FFFFFF;
         font-weight: bold;
 
@@ -122,37 +122,37 @@ li {
 }
 .tabletext {
         font-family: Arial, Helvetica, sans-serif;
-        font-size: 0.8em;
+        font-size: 1em;
         color: #000000;
         background-color: #DDDDDD;
 }
 .tabletextwarning {
         font-family: Arial, Helvetica, sans-serif;
-        font-size: 0.8em;
+        font-size: 1em;
         color: #000000;
         background-color: #FFFF00;
 }
 .tabletextok {
         font-family: Arial, Helvetica, sans-serif;
-        font-size: 0.8em;
+        font-size: 1em;
         color: #000000;
         background-color: #00FF00;
 }
 .tabletexterror {
         font-family: Arial, Helvetica, sans-serif;
-        font-size: 0.8em;
+        font-size: 1em;
         color: #000000;
         background-color: #FF0000;
 }
 .tabletextinfo {
         font-family: Arial, Helvetica, sans-serif;
-        font-size: 0.8em;
+        font-size: 1em;
         color: #000000;
         background-color: #00CCFF;
 }
 .tableheader {
         font-family: Arial, Helvetica, sans-serif;
-        font-size: 0.8em;
+        font-size: 1em;
         color: #FFFFFF;
         background-color: #000000;
         font-weight: bold;
@@ -160,7 +160,7 @@ li {
 }
 .navbar-heading {
         font-family: Arial, Helvetica, sans-serif;
-        font-size: 0.8em;
+        font-size: 1em;
         background-color: #FFFFFF;
         font-weight: bold;
         color: #000000;

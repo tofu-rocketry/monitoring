@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.humanize',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
@@ -102,7 +103,8 @@ ROOT_URLCONF = 'monitoring.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        # Add project-wide templates directory
+        'DIRS': [os.path.join(BASE_DIR, 'monitoring', 'templates'),],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
