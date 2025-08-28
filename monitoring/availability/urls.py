@@ -1,7 +1,7 @@
-from django.conf.urls import url
+from django.urls import path
 
 from monitoring.availability import views
 
 urlpatterns = [
-    url(r'^$', views.status, name='availability'),
+    path('', views.status, name='availability'),
 ]
