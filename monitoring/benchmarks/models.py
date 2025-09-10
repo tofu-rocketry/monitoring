@@ -12,7 +12,7 @@ class BenchmarksBySubmithost(models.Model):
 
     class Meta:
         ordering = ('SiteName',)
-
+        unique_together = ('SiteName', 'SubmitHost', 'RecordType')
 
 class VJobRecords(models.Model):
     Site = models.CharField(max_length=255, primary_key=True)
