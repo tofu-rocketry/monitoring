@@ -280,7 +280,7 @@ def refresh_BenchmarksBySubmitHost_from_view(view_name):
             SELECT DISTINCT v.Site, v.SubmitHost, v.ServiceLevelType, (v.NormalisedWallDuration / v.WallDuration) AS ServiceLevel, v.UpdateTime AS LatestPublish
             FROM {view_name} v
             JOIN (
-                SELECT Site, SubmitHost, MAX(UpdateTime) AS LatestPublish
+                SELECT Site, SubmitHost, MAX(UpdateTime) AS LatestPublish, (NormalisedWallDuration / WallDuration) AS ServiceLevel
                 FROM {view_name}
                 WHERE UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
                     AND WallDuration > 0
