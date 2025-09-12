@@ -245,13 +245,13 @@ def refresh_BenchmarksBySubmitHost_from_view(view_name):
     try:
         if view_name == 'VSummaries':
             sql_query = f"""
-            SELECT v.Site, v.SubmitHost, v.ServiceLevelType, v.ServiceLevel, v.UpdateTime AS LatestPublish
+            SELECT DISTINCT v.Site, v.SubmitHost, v.ServiceLevelType, v.ServiceLevel, v.UpdateTime AS LatestPublish
             FROM {view_name} v
             JOIN (
                 SELECT Site, SubmitHost, MAX(UpdateTime) AS LatestPublish
                 FROM {view_name}
                 WHERE UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
-                GROUP BY Site, SubmitHost
+                GROUP BY Site, SubmitHost, ServiceLevelType, ServiceLevel
             ) latest
             ON v.Site = latest.Site
                AND v.SubmitHost = latest.SubmitHost
@@ -260,14 +260,14 @@ def refresh_BenchmarksBySubmitHost_from_view(view_name):
         """
         elif view_name == 'VJobRecords':
             sql_query = f"""
-            SELECT v.Site, v.SubmitHost, v.ServiceLevelType, v.ServiceLevel, v.UpdateTime AS LatestPublish
+            SELECT DISTINCT v.Site, v.SubmitHost, v.ServiceLevelType, v.ServiceLevel, v.UpdateTime AS LatestPublish
             FROM {view_name} v
             JOIN (
                 SELECT Site, SubmitHost, MAX(UpdateTime) AS LatestPublish
                 FROM {view_name}
                 WHERE EndTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
                       AND UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
-                GROUP BY Site, SubmitHost
+                GROUP BY Site, SubmitHost, ServiceLevelType, ServiceLevel
             ) latest
             ON v.Site = latest.Site
                AND v.SubmitHost = latest.SubmitHost
@@ -277,14 +277,14 @@ def refresh_BenchmarksBySubmitHost_from_view(view_name):
         """
         elif view_name == 'VNormalisedSummaries':
             sql_query = f"""
-            SELECT v.Site, v.SubmitHost, v.ServiceLevelType, (v.NormalisedWallDuration / v.WallDuration) AS ServiceLevel, v.UpdateTime AS LatestPublish
+            SELECT DISTINCT v.Site, v.SubmitHost, v.ServiceLevelType, (v.NormalisedWallDuration / v.WallDuration) AS ServiceLevel, v.UpdateTime AS LatestPublish
             FROM {view_name} v
             JOIN (
                 SELECT Site, SubmitHost, MAX(UpdateTime) AS LatestPublish
                 FROM {view_name}
                 WHERE UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
                     AND WallDuration > 0
-                GROUP BY Site, SubmitHost
+                GROUP BY Site, SubmitHost, ServiceLevelType, ServiceLevel
             ) latest
             ON v.Site = latest.Site
                AND v.SubmitHost = latest.SubmitHost
