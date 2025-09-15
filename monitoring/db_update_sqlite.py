@@ -256,7 +256,7 @@ def refresh_BenchmarksBySubmitHost_from_view(view_name):
             ON v.Site = latest.Site
                AND v.SubmitHost = latest.SubmitHost
                AND v.UpdateTime = latest.LatestPublish
-            WHERE v.UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH);   
+            WHERE v.UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH);
         """
         elif view_name == 'VJobRecords':
             sql_query = f"""
@@ -273,7 +273,7 @@ def refresh_BenchmarksBySubmitHost_from_view(view_name):
                AND v.SubmitHost = latest.SubmitHost
                AND v.UpdateTime = latest.LatestPublish
             WHERE v.EndTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
-                  AND v.UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH);   
+                  AND v.UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH);
         """
         elif view_name == 'VNormalisedSummaries':
             sql_query = f"""
