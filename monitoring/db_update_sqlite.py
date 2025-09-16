@@ -245,41 +245,52 @@ def refresh_BenchmarksBySubmitHost_from_view(view_name):
     try:
         if view_name == 'VSummaries':
             sql_query = f"""
-            SELECT
-                Site,
-                SubmitHost,
-                ServiceLevelType,
-                ServiceLevel,
-                max(UpdateTime) AS LatestPublish
-            FROM {view_name}
-            WHERE UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
-            GROUP BY Site, SubmitHost;
+            SELECT DISTINCT v.Site, v.SubmitHost, v.ServiceLevelType, v.ServiceLevel, v.UpdateTime AS LatestPublish
+            FROM {view_name} AS v
+            JOIN (
+                SELECT Site, SubmitHost, MAX(UpdateTime) AS LatestPublish
+                FROM {view_name}
+                WHERE UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
+                GROUP BY Site, SubmitHost, ServiceLevelType, ServiceLevel
+            ) AS latest
+            ON v.Site = latest.Site
+               AND v.SubmitHost = latest.SubmitHost
+               AND v.UpdateTime = latest.LatestPublish
+            WHERE v.UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH);
         """
         elif view_name == 'VJobRecords':
             sql_query = f"""
-            SELECT
-                Site,
-                SubmitHost,
-                ServiceLevelType,
-                ServiceLevel,
-                max(UpdateTime) AS LatestPublish
-            FROM {view_name}
-            WHERE EndTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
-                  AND UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
-            GROUP BY Site, SubmitHost;
+            SELECT DISTINCT v.Site, v.SubmitHost, v.ServiceLevelType, v.ServiceLevel, v.UpdateTime AS LatestPublish
+            FROM {view_name} AS v
+            JOIN (
+                SELECT Site, SubmitHost, MAX(UpdateTime) AS LatestPublish
+                FROM {view_name}
+                WHERE EndTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
+                      AND UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
+                GROUP BY Site, SubmitHost, ServiceLevelType, ServiceLevel
+            ) AS latest
+            ON v.Site = latest.Site
+               AND v.SubmitHost = latest.SubmitHost
+               AND v.UpdateTime = latest.LatestPublish
+            WHERE v.EndTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
+                  AND v.UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH);
         """
         elif view_name == 'VNormalisedSummaries':
             sql_query = f"""
-            SELECT
-                Site,
-                SubmitHost,
-                ServiceLevelType,
-                (NormalisedWallDuration / WallDuration) AS ServiceLevel,
-                max(UpdateTime) AS LatestPublish
-            FROM {view_name}
-            WHERE UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
-                  AND WallDuration > 0
-            GROUP BY Site, SubmitHost;
+            SELECT DISTINCT v.Site, v.SubmitHost, v.ServiceLevelType, ROUND(v.NormalisedWallDuration / v.WallDuration, 3) AS ServiceLevel, v.UpdateTime AS LatestPublish
+            FROM {view_name} AS v
+            JOIN (
+                SELECT Site, SubmitHost, MAX(UpdateTime) AS LatestPublish, ROUND(NormalisedWallDuration / WallDuration, 3) AS ServiceLevel
+                FROM {view_name}
+                WHERE UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
+                    AND WallDuration > 0
+                GROUP BY Site, SubmitHost, ServiceLevelType, ServiceLevel
+            ) AS latest
+            ON v.Site = latest.Site
+               AND v.SubmitHost = latest.SubmitHost
+               AND v.UpdateTime = latest.LatestPublish
+            WHERE v.UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
+                  AND v.WallDuration > 0;
         """
         else:
             log.warning(f"Unknown view name: {view_name}")
@@ -293,12 +304,12 @@ def refresh_BenchmarksBySubmitHost_from_view(view_name):
             BenchmarksBySubmithost.objects.update_or_create(
                 defaults={
                     'UpdateTime': make_aware(f.LatestPublish) if is_naive(f.LatestPublish) else f.LatestPublish,
-                    'RecordType': model_class._meta.verbose_name
                 },
                 SiteName=f.Site,
                 SubmitHost=f.SubmitHost,
                 BenchmarkType=f.ServiceLevelType,
                 BenchmarkValue=f.ServiceLevel,
+                RecordType=model_class._meta.verbose_name
             )
 
         log.info(f"Refreshed BenchmarksBySubmitHost from {view_name}")
