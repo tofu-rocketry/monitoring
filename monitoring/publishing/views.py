@@ -15,10 +15,8 @@ from rest_framework.pagination import PageNumberPagination
 
 from monitoring.publishing.models import (
     GridSite,
-    VSuperSummaries,
     CloudSite,
     GridSiteSync,
-    VSyncRecords,
     GridSiteSyncSubmitH
 )
 
@@ -28,24 +26,6 @@ from monitoring.publishing.serializers import (
     GridSiteSyncSerializer,
     GridSiteSyncSubmitHSerializer
 )
-
-summaries_dict_standard = {
-    "Site": [],
-    "Month": [],
-    "Year": [],
-    "RecordCountPublished": [],
-    "RecordStart": [],
-    "RecordEnd": [],
-    "SubmitHostSumm": [],
-}
-
-syncrecords_dict_standard = {
-    "Site": [],
-    "Month": [],
-    "Year": [],
-    "RecordCountInDb": [],
-    "SubmitHostSync": []
-}
 
 
 def update_dict_stdout_and_returncode(single_dict, date):
@@ -62,55 +42,6 @@ def update_dict_stdout_and_returncode(single_dict, date):
         single_dict['returncode'] = 3
         single_dict['stdout'] = "UNKNOWN"
     return single_dict
-
-
-def fill_summaries_dict(inpDict, row):
-
-    fields_to_update_and_value_to_add = {
-        "Site": row.Site,
-        "Month": row.Month,
-        "Year": row.Year,
-        "RecordCountPublished": row.RecordCountPublished,
-        "RecordStart": row.RecordStart,
-        "RecordEnd": row.RecordEnd,
-    }
-
-    for field, value in fields_to_update_and_value_to_add.items():
-        inpDict[field] = inpDict.get(field) + [value]
-
-    if hasattr(row, "SubmitHostSumm"):
-        inpDict["SubmitHostSumm"] = inpDict.get("SubmitHostSumm") + [row.SubmitHostSumm]
-
-    return inpDict
-
-
-def fill_syncrecords_dict(inpDict, row):
-    inpDict["Site"] = inpDict.get("Site") + [row.Site]
-    inpDict["Month"] = inpDict.get("Month") + [row.Month]
-    inpDict["Year"] = inpDict.get("Year") + [row.Year]
-    inpDict["RecordCountInDb"] = inpDict.get("RecordCountInDb") + [row.RecordCountInDb]
-    if hasattr(row, "SubmitHostSync"):
-        inpDict["SubmitHostSync"] = inpDict.get("SubmitHostSync") + [row.SubmitHostSync]
-    return inpDict
-
-
-def correct_dict(inpDict):
-    keys_to_remove = []
-    for key, val in inpDict.items():
-        if len(val) == 0:
-            keys_to_remove.append(key)
-    for key in keys_to_remove:
-        inpDict.pop(key)
-    return inpDict
-
-
-# Combine Year and Month into one string (display purposes)
-def get_year_month_str(year, month):
-    year_string = str(year)
-    month_string = str(month)
-    if len(month_string) == 1:
-        month_string = '0' + month_string
-    return year_string + '-' + month_string
 
 
 class GridSiteViewSet(viewsets.ReadOnlyModelViewSet):
@@ -243,106 +174,23 @@ class GridSiteSyncSubmitHViewSet(MultipleFieldLookupMixin, viewsets.ReadOnlyMode
 
     def retrieve(self, request, SiteName=None, YearMonth=None):
         last_fetched = GridSiteSyncSubmitH.objects.aggregate(Max('fetched'))['fetched__max']
-        Year, Month = YearMonth.split('-')
-        sitename_in_table = None
-        yearmonth_in_table = None
-
-        # This is to ensure the data is updated when changing month
-        if GridSiteSyncSubmitH.objects.count() > 0:
-            row_1 = GridSiteSyncSubmitH.objects.filter()[:1].get()
-            sitename_in_table = row_1.SiteName
-            yearmonth_in_table = row_1.YearMonth
 
         if last_fetched is not None:
             print(last_fetched.replace(tzinfo=None), datetime.today() - timedelta(hours=1, seconds=20))
-        if last_fetched is None or last_fetched.replace(tzinfo=None) < (datetime.today() - timedelta(hours=1, seconds=20)) or (sitename_in_table != SiteName) or (yearmonth_in_table != YearMonth):
-            print('Out of date')
 
-            sql_query_summaries = """
-                SELECT
-                    Site,
-                    Month,
-                    Year,
-                    SUM(NumberOfJobs) AS RecordCountPublished,
-                    SubmitHost AS SubmitHostSumm,
-                    MIN(EarliestEndTime) AS RecordStart,
-                    MAX(LatestEndTime) AS RecordEnd
-                FROM VSuperSummaries
-                WHERE
-                    Site='{}' AND
-                    Month='{}' AND
-                    Year='{}'
-                GROUP BY SubmitHost;
-            """.format(SiteName, Month, Year)
-            fetchset_Summaries = VSuperSummaries.objects.using('grid').raw(sql_query_summaries)
+        sites_and_year_list_qs = GridSiteSyncSubmitH.objects.filter(
+            SiteName=SiteName,
+            YearMonth=YearMonth
+        ).order_by('SubmitHost')
 
-            sql_query_syncrecords = """
-                SELECT
-                    Site,
-                    Month,
-                    Year,
-                    SUM(NumberOfJobs) AS RecordCountInDb,
-                    SubmitHost AS SubmitHostSync
-                FROM VSyncRecords
-                WHERE
-                    Site='{}' AND
-                    Month='{}' AND
-                    Year='{}'
-                GROUP BY SubmitHost;
-            """.format(SiteName, Month, Year)
-            fetchset_SyncRecords = VSyncRecords.objects.using('grid').raw(sql_query_syncrecords)
+        sites_list_serializer = self.get_serializer(sites_and_year_list_qs, many=True)
 
-            summaries_dict = summaries_dict_standard.copy()
-            syncrecords_dict = syncrecords_dict_standard.copy()
-
-            for row in fetchset_Summaries:
-                summaries_dict = fill_summaries_dict(summaries_dict, row)
-                summaries_dict = correct_dict(summaries_dict)
-            for row in fetchset_SyncRecords:
-                syncrecords_dict = fill_syncrecords_dict(syncrecords_dict, row)
-                syncrecords_dict = correct_dict(syncrecords_dict)
-
-            df_Summaries = pd.DataFrame.from_dict(summaries_dict)
-            df_SyncRecords = pd.DataFrame.from_dict(syncrecords_dict)
-            df_Summaries.dropna(inplace=True)
-            df_SyncRecords.dropna(inplace=True)
-
-            df_all = df_Summaries.merge(
-                df_SyncRecords,
-                left_on=['Site', 'Month', 'Year', 'SubmitHostSumm'],
-                right_on=['Site', 'Month', 'Year', 'SubmitHostSync'],
-                how='outer'
-            )
-
-            fetchset = df_all.to_dict('index')
-
-            # This is to list only data for one month
-            GridSiteSyncSubmitH.objects.all().delete()
-
-            for f in fetchset.values():
-                GridSiteSyncSubmitH.objects.update_or_create(
-                    defaults={
-                        'RecordStart': f.get("RecordStart"),
-                        'RecordEnd': f.get("RecordEnd"),
-                        'RecordCountPublished': f.get("RecordCountPublished"),
-                        'RecordCountInDb': f.get("RecordCountInDb"),
-                    },
-                    SiteName=f.get("Site"),
-                    YearMonth=get_year_month_str(f.get("Year"), f.get("Month")),
-                    Month=f.get("Month"),
-                    Year=f.get("Year"),
-                    SubmitHost=f.get("SubmitHostSumm"),
-                )
-
-        else:
-            print('No need to update')
-
-        response = super(GridSiteSyncSubmitHViewSet, self).list(request)
-        response.data = {
-            'submisthosts': response.data,
+        response = {
+            'submisthosts': sites_list_serializer.data,
             'last_fetched': last_fetched
         }
-        return response
+
+        return Response(response)
 
 
 class CloudSiteViewSet(viewsets.ReadOnlyModelViewSet):
