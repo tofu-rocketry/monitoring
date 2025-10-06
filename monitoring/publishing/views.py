@@ -5,7 +5,6 @@ from datetime import datetime, timedelta
 
 from django.db.models import Max
 from django.shortcuts import get_object_or_404
-import pandas as pd
 
 from rest_framework import viewsets
 from rest_framework.renderers import TemplateHTMLRenderer
@@ -178,12 +177,12 @@ class GridSiteSyncSubmitHViewSet(MultipleFieldLookupMixin, viewsets.ReadOnlyMode
         if last_fetched is not None:
             print(last_fetched.replace(tzinfo=None), datetime.today() - timedelta(hours=1, seconds=20))
 
-        sites_and_year_list_qs = GridSiteSyncSubmitH.objects.filter(
+        site_and_year_queryset = GridSiteSyncSubmitH.objects.filter(
             SiteName=SiteName,
             YearMonth=YearMonth
         ).order_by('SubmitHost')
 
-        sites_list_serializer = self.get_serializer(sites_and_year_list_qs, many=True)
+        sites_list_serializer = self.get_serializer(site_and_year_queryset, many=True)
 
         response = {
             'submisthosts': sites_list_serializer.data,
