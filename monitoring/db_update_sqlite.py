@@ -480,11 +480,12 @@ def refresh_gridsitesync_submithost():
 if __name__ == "__main__":
     log.info('=====================')
 
+    # Sort log entries in ascending order by query duration
     refresh_gridsite()
-    refresh_cloudsite()
     refresh_gridsitesync()
-    refresh_BenchmarksBySubmitHost()
     refresh_gridsitesync_submithost()
+    refresh_cloudsite()
+    refresh_BenchmarksBySubmitHost()
 
     log.info(
         "Data retrieval and processing attempted. "
