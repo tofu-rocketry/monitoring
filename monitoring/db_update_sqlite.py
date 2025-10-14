@@ -34,24 +34,32 @@ from monitoring.publishing.models import (
     GridSiteSync,
     VAnonCloudRecord,
     VSuperSummaries,
-    VSyncRecords
-)
-
-from monitoring.publishing.views import (
-    summaries_dict_standard,
-    syncrecords_dict_standard,
-    correct_dict,
-    fill_summaries_dict,
-    fill_syncrecords_dict,
-    get_year_month_str
+    VSyncRecords,
+    GridSiteSyncSubmitH,
 )
 
 from monitoring.benchmarks.models import (
     BenchmarksBySubmithost,
-    VJobRecords,
-    VSummaries,
-    VNormalisedSummaries,
 )
+
+summaries_dict_standard = {
+    "Site": [],
+    "Month": [],
+    "Year": [],
+    "RecordCountPublished": [],
+    "RecordStart": [],
+    "RecordEnd": [],
+    "SubmitHostSumm": [],
+}
+
+syncrecords_dict_standard = {
+    "Site": [],
+    "Month": [],
+    "Year": [],
+    "RecordCountInDb": [],
+    "SubmitHostSync": []
+}
+
 
 try:
     # Read configuration from the file
@@ -72,6 +80,55 @@ logging.basicConfig(
 
 # set up the logger
 log = logging.getLogger(__name__)
+
+
+def fill_summaries_dict(inpDict, row):
+
+    fields_to_update_and_value_to_add = {
+        "Site": row.Site,
+        "Month": row.Month,
+        "Year": row.Year,
+        "RecordCountPublished": row.RecordCountPublished,
+        "RecordStart": row.RecordStart,
+        "RecordEnd": row.RecordEnd,
+    }
+
+    for field, value in fields_to_update_and_value_to_add.items():
+        inpDict[field] = inpDict.get(field) + [value]
+
+    if hasattr(row, "SubmitHostSumm"):
+        inpDict["SubmitHostSumm"] = inpDict.get("SubmitHostSumm") + [row.SubmitHostSumm]
+
+    return inpDict
+
+
+def fill_syncrecords_dict(inpDict, row):
+    inpDict["Site"] = inpDict.get("Site") + [row.Site]
+    inpDict["Month"] = inpDict.get("Month") + [row.Month]
+    inpDict["Year"] = inpDict.get("Year") + [row.Year]
+    inpDict["RecordCountInDb"] = inpDict.get("RecordCountInDb") + [row.RecordCountInDb]
+    if hasattr(row, "SubmitHostSync"):
+        inpDict["SubmitHostSync"] = inpDict.get("SubmitHostSync") + [row.SubmitHostSync]
+    return inpDict
+
+
+def correct_dict(inpDict):
+    keys_to_remove = []
+    for key, val in inpDict.items():
+        if len(val) == 0:
+            keys_to_remove.append(key)
+    for key in keys_to_remove:
+        inpDict.pop(key)
+    return inpDict
+
+
+# Combine Year and Month into one string (display purposes)
+def get_year_month_str(year, month):
+    year_string = str(year)
+    month_string = str(month)
+    if len(month_string) == 1:
+        month_string = '0' + month_string
+    return year_string + '-' + month_string
 
 
 def determine_sync_status(f):
@@ -318,12 +375,116 @@ def refresh_BenchmarksBySubmitHost_from_view(view_name):
         log.exception(f'Error while trying to refresh BenchmarksBySubmitHost from {view_name}')
 
 
+def refresh_gridsitesync_submithost():
+    try:
+        # Fetch all published summaries
+        sql_query_summaries = """
+            SELECT
+                Site,
+                Month,
+                Year,
+                SUM(NumberOfJobs) AS RecordCountPublished,
+                SubmitHost AS SubmitHostSumm,
+                MIN(EarliestEndTime) AS RecordStart,
+                MAX(LatestEndTime) AS RecordEnd
+            FROM VSuperSummaries
+            WHERE
+                Year >= YEAR(NOW()) - 2
+                AND EarliestEndTime > '1900-01-01'
+                AND LatestEndTime > '1900-01-01'
+            GROUP BY Site, Year, Month, SubmitHost;
+        """
+        fetchset_summaries = VSuperSummaries.objects.using('grid').raw(sql_query_summaries)
+
+        # Fetch all sync records
+        sql_query_syncrec = """
+            SELECT
+                Site,
+                Month,
+                Year,
+                SUM(NumberOfJobs) AS RecordCountInDb,
+                SubmitHost AS SubmitHostSync
+            FROM VSyncRecords
+            WHERE
+                Year >= YEAR(NOW()) - 2
+            GROUP BY Site, Year, Month, SubmitHost;
+        """
+        fetchset_syncrecords = VSyncRecords.objects.using('grid').raw(sql_query_syncrec)
+
+        # Build dicts using helper methods
+        summaries_dict = summaries_dict_standard.copy()
+        syncrecords_dict = syncrecords_dict_standard.copy()
+
+        for row in fetchset_summaries:
+            summaries_dict = fill_summaries_dict(summaries_dict, row)
+
+        for row in fetchset_syncrecords:
+            syncrecords_dict = fill_syncrecords_dict(syncrecords_dict, row)
+
+        summaries_dict = correct_dict(summaries_dict)
+        syncrecords_dict = correct_dict(syncrecords_dict)
+
+        # Convert to DataFrames
+        df_summaries = pd.DataFrame.from_dict(summaries_dict)
+        df_syncrecords = pd.DataFrame.from_dict(syncrecords_dict)
+
+        # Merge on all keys
+        df_all = df_summaries.merge(
+            df_syncrecords,
+            left_on=['Site', 'Month', 'Year', 'SubmitHostSumm'],
+            right_on=['Site', 'Month', 'Year', 'SubmitHostSync'],
+            how='outer'
+        )
+
+        # Store in the local DB
+        for record in df_all.to_dict('records'):
+            site = record.get("Site")
+            month = record.get("Month")
+            year = record.get("Year")
+            submit_host = record.get("SubmitHostSumm") or record.get("SubmitHostSync")
+            record_start = record.get("RecordStart")
+
+            # Skip rows where RecordStart is missing or NaN
+            if pd.isna(record_start):
+                continue
+
+            # Sanitize numeric fields
+            record_count_published = record.get("RecordCountPublished")
+            if pd.isna(record_count_published):
+                record_count_published = 0
+
+            record_count_in_db = record.get("RecordCountInDb")
+            if pd.isna(record_count_in_db):
+                record_count_in_db = 0
+
+            GridSiteSyncSubmitH.objects.update_or_create(
+                SiteName=site,
+                YearMonth=get_year_month_str(year, month),
+                Month=month,
+                Year=year,
+                SubmitHost=submit_host,
+                defaults={
+                    'RecordStart': record_start,
+                    'RecordEnd': record.get("RecordEnd"),
+                    'RecordCountPublished': record_count_published,
+                    'RecordCountInDb': record_count_in_db,
+                }
+            )
+
+        log.info("Refreshed GridSiteSyncSubmitH")
+
+    except DatabaseError:
+        log.exception("Error while trying to refresh GridSiteSyncSubmitH")
+
+
 if __name__ == "__main__":
     log.info('=====================')
 
+    # Sort log entries in ascending order by query duration
     refresh_gridsite()
-    refresh_cloudsite()
     refresh_gridsitesync()
+    refresh_gridsitesync_submithost()
+    refresh_cloudsite()
     refresh_BenchmarksBySubmitHost()
 
     log.info(
