@@ -40,9 +40,6 @@ from monitoring.publishing.models import (
 
 from monitoring.benchmarks.models import (
     BenchmarksBySubmithost,
-    VJobRecords,
-    VSummaries,
-    VNormalisedSummaries,
 )
 
 summaries_dict_standard = {
