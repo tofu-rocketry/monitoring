@@ -1,4 +1,5 @@
 {% load static %}
+{% load humanize %}
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -20,14 +21,14 @@
 <hr>
 
 <table>
-  <tr class='tableheader'><th colspan='6'> {{ submisthosts.0.SiteName }}, {{ submisthosts.0.YearMonth }} </th></tr>
-  <tr class='tableheader'>
-    <th>Month</th>
-    <th>SubmitHost</th>
-    <th>Record Start</th>
-    <th>Record End</th>
-    <th>Record Count <br/> In Your Database</th>
-    <th>Record Count <br/> What You Published</th>
+  <tr><th colspan='6' class='tableheader'> {{ submisthosts.0.SiteName }}, {{ submisthosts.0.YearMonth }} </th></tr>
+  <tr>
+    <th class='tableheader'>Month</th>
+    <th class='tableheader'>SubmitHost</th>
+    <th class='tableheader'>Record Start</th>
+    <th class='tableheader'>Record End</th>
+    <th class='tableheader'>Record Count <br/> In Your Database</th>
+    <th class='tableheader'>Record Count <br/> What You Published</th>
   </tr>
 
   {% for host in submisthosts %}

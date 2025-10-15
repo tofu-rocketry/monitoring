@@ -29,13 +29,13 @@
   <br/>
 
   <table border="1">
-    <tr class='tableheader'>
-      <th>Site</th>
-      <th>Submit host</th>
-      <th>Benchmark type</th>
-      <th>Benchmark value</th>
-      <th>Record type</th>
-      <th>Last updated</th>
+    <tr>
+      <th class='tableheader'>Site</th>
+      <th class='tableheader'>Submit host</th>
+      <th class='tableheader'>Benchmark type</th>
+      <th class='tableheader'>Benchmark value</th>
+      <th class='tableheader'>Record type</th>
+      <th class='tableheader'>Last updated</th>
     </tr>
     {% for benchmark in benchmarks %}
     <tr onmouseover="this.className='highlight-row'" onmouseout="this.className='tabletext'" class="tabletext">
