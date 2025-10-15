@@ -20,24 +20,24 @@
 <hr>
 
 <table>
-  <tr><th colspan='6' class='tableheader'> {{ submisthosts.0.SiteName }}, {{ submisthosts.0.YearMonth }} </td></tr>
-  <tr>
-    <th class='tableheader'>Month</th>
-    <th class='tableheader'>SubmitHost</th>
-    <th class='tableheader'>Record Start</th>
-    <th class='tableheader'>Record End</th>
-    <th class='tableheader'>Record Count <br/> In Your Database</th>
-    <th class='tableheader'>Record Count <br/> What You Published</th>
+  <tr class='tableheader'><th colspan='6'> {{ submisthosts.0.SiteName }}, {{ submisthosts.0.YearMonth }} </th></tr>
+  <tr class='tableheader'>
+    <th>Month</th>
+    <th>SubmitHost</th>
+    <th>Record Start</th>
+    <th>Record End</th>
+    <th>Record Count <br/> In Your Database</th>
+    <th>Record Count <br/> What You Published</th>
   </tr>
 
   {% for host in submisthosts %}
-  <tr>
-    <td class='tabletext'>{{ host.YearMonth }} </td>
-    <td class='tabletext'>{{ host.SubmitHost }}</td>
-    <td class='tabletext'>{{ host.RecordStart }}</td>
-    <td class='tabletext'>{{ host.RecordEnd }}</td>
-    <td class='tabletext'>{{ host.RecordCountPublished|intcomma }}</td>
-    <td class='tabletext'>{{ host.RecordCountInDb|intcomma }}</td>
+  <tr onmouseover="this.className='highlight-row'" onmouseout="this.className='tabletext'" class="tabletext">
+    <td>{{ host.YearMonth }} </td>
+    <td>{{ host.SubmitHost }}</td>
+    <td>{{ host.RecordStart }}</td>
+    <td>{{ host.RecordEnd }}</td>
+    <td>{{ host.RecordCountPublished|intcomma }}</td>
+    <td>{{ host.RecordCountInDb|intcomma }}</td>
   </tr>
   {% endfor %}
 </table>

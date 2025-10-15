@@ -20,26 +20,26 @@
 <hr>
 
 <table>
-  <tr><th colspan='6' class='tableheader'> {{ records.0.SiteName }} </td></tr>
-  <tr>
-    <th class='tableheader'>Month</th>
-    <th class='tableheader'>Record Start</th>
-    <th class='tableheader'>Record End</th>
-    <th class='tableheader'>Record Count <br/> In Your Database</th>
-    <th class='tableheader'>Record Count <br/> What You Published</th>
-    <th class='tableheader'>Synchronisation Status</th>
+  <tr class='tableheader'><th colspan='6'> {{ records.0.SiteName }} </th></tr>
+  <tr class='tableheader'>
+    <th>Month</th>
+    <th>Record Start</th>
+    <th>Record End</th>
+    <th>Record Count <br/> In Your Database</th>
+    <th>Record Count <br/> What You Published</th>
+    <th>Synchronisation Status</th>
   </tr>
 
   {% for record in records %}
-  <tr>
-    <td class='tabletext'>
+  <tr onmouseover="this.className='highlight-row'" onmouseout="this.className='tabletext'" class="tabletext">
+    <td>
       <a href="{% url 'gridsync-submithost'  SiteName=record.SiteName YearMonth=record.YearMonth %}">{{ record.YearMonth }}</a>
     </td>
-    <td class='tabletext'>{{ record.RecordStart }}</td>
-    <td class='tabletext'>{{ record.RecordEnd }}</td>
-    <td class='tabletext'>{{ record.RecordCountPublished|intcomma }}</td>
-    <td class='tabletext'>{{ record.RecordCountInDb|intcomma }}</td>
-    <td class='tabletext'>{{ record.SyncStatus }}</td>
+    <td>{{ record.RecordStart }}</td>
+    <td>{{ record.RecordEnd }}</td>
+    <td>{{ record.RecordCountPublished|intcomma }}</td>
+    <td>{{ record.RecordCountInDb|intcomma }}</td>
+    <td>{{ record.SyncStatus }}</td>
   </tr>
   {% endfor %}
 </table>

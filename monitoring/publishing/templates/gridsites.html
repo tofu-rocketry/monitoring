@@ -20,18 +20,18 @@
 <hr>
 
 <table>
-  <tr>
-    <th class='tableheader'>Site</th>
-    <th class='tableheader'>Measurement Date</th>
-    <th class='tableheader'>Measurement Time</th>
-    <th class='tableheader'>Publication Status</th>
+  <tr class='tableheader'>
+    <th>Site</th>
+    <th>Measurement Date</th>
+    <th>Measurement Time</th>
+    <th>Publication Status</th>
   </tr>
   {% for site in sites %}
-  <tr>
-    <td align='middle' class='tabletext'>{{ site.SiteName }}</td>
-    <td align='middle' class='tabletext'>{{ site.updated|date:"Y-m-d" }}</td>
-    <td align='middle' class='tabletext'>{{ site.updated|date:"G:i:s" }}</td>
-    <td align='middle' class='tabletext'>{{ site.stdout }}</td>
+  <tr onmouseover="this.className='highlight-row'" onmouseout="this.className='tabletext'" class="tabletext">
+    <td align='middle'>{{ site.SiteName }}</td>
+    <td align='middle'>{{ site.updated|date:"Y-m-d" }}</td>
+    <td align='middle'>{{ site.updated|date:"G:i:s" }}</td>
+    <td align='middle'>{{ site.stdout }}</td>
   </tr>
   {% endfor %}
 </table>

@@ -19,9 +19,9 @@
       <th class='tableheader'>Number of Sites</th>
     </tr>
     {% for item in site_counts_by_record_type %}
-    <tr>
-        <td class='tabletext'>{{ item.RecordType }}</td>
-        <td class='tabletext'>{{ item.site_count }}</td>
+    <tr class='tabletext'>
+        <td>{{ item.RecordType }}</td>
+        <td>{{ item.site_count }}</td>
     </tr>
      {% endfor %}
   </table>
@@ -29,22 +29,22 @@
   <br/>
 
   <table border="1">
-    <tr>
-      <th class='tableheader'>Site</th>
-      <th class='tableheader'>Submit host</th>
-      <th class='tableheader'>Benchmark type</th>
-      <th class='tableheader'>Benchmark value</th>
-      <th class='tableheader'>Record type</th>
-      <th class='tableheader'>Last updated</th>
+    <tr class='tableheader'>
+      <th>Site</th>
+      <th>Submit host</th>
+      <th>Benchmark type</th>
+      <th>Benchmark value</th>
+      <th>Record type</th>
+      <th>Last updated</th>
     </tr>
     {% for benchmark in benchmarks %}
-    <tr>
-      <td class='tabletext'>{{ benchmark.SiteName }}</td>
-      <td class='tabletext'>{{ benchmark.SubmitHost }}</td>
-      <td class='tabletext'>{{ benchmark.BenchmarkType }}</td>
-      <td class='tabletext'>{{ benchmark.BenchmarkValue }}</td>
-      <td class='tabletext'>{{ benchmark.RecordType }}</td>
-      <td class='tabletext'>{{ benchmark.UpdateTime|date:"Y-m-d H:i:s" }}</td>
+    <tr onmouseover="this.className='highlight-row'" onmouseout="this.className='tabletext'" class="tabletext">
+      <td>{{ benchmark.SiteName }}</td>
+      <td>{{ benchmark.SubmitHost }}</td>
+      <td>{{ benchmark.BenchmarkType }}</td>
+      <td>{{ benchmark.BenchmarkValue }}</td>
+      <td>{{ benchmark.RecordType }}</td>
+      <td>{{ benchmark.UpdateTime|date:"Y-m-d H:i:s" }}</td>
     </tr>
     {% endfor %}
   </table>
