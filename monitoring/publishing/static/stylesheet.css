@@ -182,3 +182,7 @@ li {
 .invisibleBorder {
         border: thin dashed #EEEEEE;
 }
+.highlight-row {
+        background-color: #8D8D8D;
+        color: white;
+}

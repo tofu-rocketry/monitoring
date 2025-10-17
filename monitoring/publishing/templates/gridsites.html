@@ -3,7 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>APEL Publication Summary</title>
   <link href="{% static 'stylesheet.css' %}" rel="stylesheet" type="text/css" />
   <link href="{% static 'style.css' %}" rel="stylesheet" type="text/css" />
@@ -27,11 +27,11 @@
     <th class='tableheader'>Publication Status</th>
   </tr>
   {% for site in sites %}
-  <tr>
-    <td align='middle' class='tabletext'>{{ site.SiteName }}</td>
-    <td align='middle' class='tabletext'>{{ site.updated|date:"Y-m-d" }}</td>
-    <td align='middle' class='tabletext'>{{ site.updated|date:"G:i:s" }}</td>
-    <td align='middle' class='tabletext'>{{ site.stdout }}</td>
+  <tr onmouseover="this.className='highlight-row'" onmouseout="this.className='tabletext'" class="tabletext">
+    <td align='middle'>{{ site.SiteName }}</td>
+    <td align='middle'>{{ site.updated|date:"Y-m-d" }}</td>
+    <td align='middle'>{{ site.updated|date:"G:i:s" }}</td>
+    <td align='middle'>{{ site.stdout }}</td>
   </tr>
   {% endfor %}
 </table>

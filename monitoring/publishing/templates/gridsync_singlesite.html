@@ -4,7 +4,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>APEL Publication Summary</title>
   <link href="{% static 'stylesheet.css' %}" rel="stylesheet" type="text/css" />
   <link href="{% static 'style.css' %}" rel="stylesheet" type="text/css" />
@@ -21,7 +21,7 @@
 <hr>
 
 <table>
-  <tr><th colspan='6' class='tableheader'> {{ records.0.SiteName }} </td></tr>
+  <tr><th colspan='6' class='tableheader'> {{ records.0.SiteName }} </th></tr>
   <tr>
     <th class='tableheader'>Month</th>
     <th class='tableheader'>Record Start</th>
@@ -32,15 +32,15 @@
   </tr>
 
   {% for record in records %}
-  <tr>
-    <td class='tabletext'>
+  <tr onmouseover="this.className='highlight-row'" onmouseout="this.className='tabletext'" class="tabletext">
+    <td>
       <a href="{% url 'gridsync-submithost'  SiteName=record.SiteName YearMonth=record.YearMonth %}">{{ record.YearMonth }}</a>
     </td>
-    <td class='tabletext'>{{ record.RecordStart }}</td>
-    <td class='tabletext'>{{ record.RecordEnd }}</td>
-    <td class='tabletext'>{{ record.RecordCountPublished|intcomma }}</td>
-    <td class='tabletext'>{{ record.RecordCountInDb|intcomma }}</td>
-    <td class='tabletext'>{{ record.SyncStatus }}</td>
+    <td>{{ record.RecordStart }}</td>
+    <td>{{ record.RecordEnd }}</td>
+    <td>{{ record.RecordCountPublished|intcomma }}</td>
+    <td>{{ record.RecordCountInDb|intcomma }}</td>
+    <td>{{ record.SyncStatus }}</td>
   </tr>
   {% endfor %}
 </table>
