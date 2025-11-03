@@ -8,20 +8,20 @@ from rest_framework import viewsets
 from rest_framework.renderers import TemplateHTMLRenderer
 
 
-from monitoring.iris.models import IrisCloudGrid
+from monitoring.iris.models import IrisCloudAndGrid
 
-from monitoring.iris.serializers import IrisCloudGridSerializer
+from monitoring.iris.serializers import IrisCloudAndGridSerializer
 
 class IrisViewSet(viewsets.ReadOnlyModelViewSet):
     # Lower('SiteName'): sorts sites alphabetically, case-insensitively.
     # '-UpdateTime': sorts records within each site by UpdateTime in descending order (latest first).
-    queryset = IrisCloudGrid.objects.all().order_by(Lower('SiteName'), '-UpdateTime')
+    queryset = IrisCloudAndGrid.objects.all().order_by(Lower('SiteName'), '-UpdateTime')
 
-    serializer_class = IrisCloudGridSerializer
-    template_name = 'iris_cloud_grid.html'
+    serializer_class = IrisCloudAndGridSerializer
+    template_name = 'iris_cloud_and_grid.html'
 
     def list(self, request):
-        last_fetched = IrisCloudGrid.objects.aggregate(Max('fetched'))['fetched__max']
+        last_fetched = IrisCloudAndGrid.objects.aggregate(Max('fetched'))['fetched__max']
         if last_fetched is not None:
             print(last_fetched.replace(tzinfo=None), datetime.today() - timedelta(hours=1, seconds=20))
 
@@ -29,9 +29,8 @@ class IrisViewSet(viewsets.ReadOnlyModelViewSet):
 
         if type(request.accepted_renderer) is TemplateHTMLRenderer:
             response.data = {
-                'irisCloudGridData': response.data,
+                'irisCloudAndGridData': response.data,
                 'last_fetched': last_fetched,
             }
 
         return response
-

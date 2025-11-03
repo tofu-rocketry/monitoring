@@ -1,16 +1,16 @@
 from rest_framework import serializers
 
-from monitoring.iris.models import IrisCloudGrid
+from monitoring.iris.models import IrisCloudAndGrid
 
 
-class IrisCloudGridSerializer(serializers.HyperlinkedModelSerializer):
+class IrisCloudAndGridSerializer(serializers.HyperlinkedModelSerializer):
     # Override default format with None so that Python datetime is used as
     # ouput format. Encoding will be determined by the renderer and can be
     # formatted by a template filter.
     UpdateTime = serializers.DateTimeField(format=None)
 
     class Meta:
-        model = IrisCloudGrid
+        model = IrisCloudAndGrid
         fields = (
             'SiteName',
             'SourceType',

@@ -11,7 +11,7 @@
 </head>
 
 <body>
-  <h2>Sites publishing cloud and grid accounting records in the last year</h2>
+  <h2>Sites publishing cloud and grid IRIS accounting records in the last year</h2>
   <p>Page last updated: {{ last_fetched|date:"Y-m-d H:i O" }}</p>
 
   <br/>
@@ -22,7 +22,7 @@
       <th class='tableheader'>Source type</th>
       <th class='tableheader'>Last updated</th>
     </tr>
-    {% for record in irisCloudGridData %}
+    {% for record in irisCloudAndGridData %}
     <tr onmouseover="this.className='highlight-row'" onmouseout="this.className='tabletext'" class="tabletext">
       <td>{{ record.SiteName }}</td>
       <td>{{ record.SourceType }}</td>
