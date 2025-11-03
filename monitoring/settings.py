@@ -78,6 +78,7 @@ INSTALLED_APPS = [
     'monitoring.publishing',
     'monitoring.availability',
     'monitoring.benchmarks',
+    'monitoring.iris',
 ]
 
 REST_FRAMEWORK = {

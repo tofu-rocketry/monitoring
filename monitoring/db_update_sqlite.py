@@ -45,6 +45,12 @@ from monitoring.benchmarks.models import (
     VNormalisedSummaries,
 )
 
+from monitoring.iris.models import (
+    IrisCloudGrid,
+    VSuperSummaries,
+    VAnonCloudRecords,
+)
+
 summaries_dict_standard = {
     "Site": [],
     "Month": [],
@@ -480,6 +486,31 @@ def refresh_gridsitesync_submithost():
         log.exception("Error while trying to refresh GridSiteSyncSubmitH")
 
 
+def refresh_iris_cloud_grid():
+    try:
+        sql_query = """
+            SELECT
+                Site,
+                max(LatestEndTime) AS LatestPublish
+            FROM VSuperSummaries
+            WHERE LatestEndTime > DATE_SUB(NOW(), INTERVAL 1 YEAR)
+            GROUP BY 1;
+        """
+        fetchset = VSuperSummaries.objects.using('grid').raw(sql_query)
+
+        for f in fetchset:
+            IrisCloudGrid.objects.update_or_create(
+                defaults={'UpdateTime': f.LatestPublish},
+                SiteName=f.Site,
+                SourceType=VSuperSummaries._meta.verbose_name
+            )
+
+        log.info("Refreshed IrisCloudGrid")
+
+    except DatabaseError:
+        log.exception('Error while trying to refresh IrisCloudGrid')
+
+
 if __name__ == "__main__":
     log.info('=====================')
 
@@ -488,7 +519,8 @@ if __name__ == "__main__":
     refresh_gridsitesync()
     refresh_gridsitesync_submithost()
     refresh_cloudsite()
-    refresh_BenchmarksBySubmitHost()
+    # refresh_BenchmarksBySubmitHost()
+    refresh_iris_cloud_grid()
 
     log.info(
         "Data retrieval and processing attempted. "
