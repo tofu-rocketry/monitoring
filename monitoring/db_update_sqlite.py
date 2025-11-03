@@ -496,7 +496,7 @@ def refresh_iris_cloud_grid():
             WHERE LatestEndTime > DATE_SUB(NOW(), INTERVAL 1 YEAR)
             GROUP BY 1;
         """
-        fetchset = VSuperSummaries.objects.using('grid').raw(sql_query)
+        fetchset = VSuperSummaries.objects.using('iris_grid').raw(sql_query)
 
         for f in fetchset:
             IrisCloudGrid.objects.update_or_create(
@@ -504,8 +504,36 @@ def refresh_iris_cloud_grid():
                 SiteName=f.Site,
                 SourceType=VSuperSummaries._meta.verbose_name
             )
+        log.info("Refreshed IrisCloudGrid from VSuperSummaries")
 
-        log.info("Refreshed IrisCloudGrid")
+        sql_query = """
+            SELECT
+                b.SiteName,
+                b.UpdateTime AS LatestPublish
+            FROM(
+                SELECT
+                    SiteName,
+                    MAX(UpdateTime) AS latest
+                FROM VAnonCloudRecords
+                WHERE UpdateTime > DATE_SUB(NOW(), INTERVAL 1 YEAR)
+                GROUP BY SiteName
+            )
+            AS a
+            INNER JOIN VAnonCloudRecords
+            AS b
+            ON b.SiteName = a.SiteName AND b.UpdateTime = a.latest
+            GROUP BY SiteName;
+        """
+        fetchset = VAnonCloudRecords.objects.using('iris_cloud').raw(sql_query)
+
+        for f in fetchset:
+            IrisCloudGrid.objects.update_or_create(
+                defaults={'UpdateTime': f.LatestPublish},
+                SiteName=f.Site,
+                SourceType=VAnonCloudRecords._meta.verbose_name
+            )    
+
+        log.info("Refreshed IrisCloudGrid from VAnonCloudRecords")
 
     except DatabaseError:
         log.exception('Error while trying to refresh IrisCloudGrid')

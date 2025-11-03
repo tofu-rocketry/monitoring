@@ -58,6 +58,22 @@ try:
             'USER': cp.get('db_cloud', 'username'),
             'PASSWORD': cp.get('db_cloud', 'password'),
         },
+        'iris_grid': {
+            'ENGINE': cp.get('db_iris_grid', 'backend'),
+            'HOST': cp.get('db_iris_grid', 'hostname'),
+            'PORT': cp.get('db_iris_grid', 'port'),
+            'NAME': cp.get('db_iris_grid', 'name'),
+            'USER': cp.get('db_iris_grid', 'username'),
+            'PASSWORD': cp.get('db_iris_grid', 'password'),
+        },
+        'iris_cloud': {
+            'ENGINE': cp.get('db_iris_cloud', 'backend'),
+            'HOST': cp.get('db_iris_cloud', 'hostname'),
+            'PORT': cp.get('db_iris_cloud', 'port'),
+            'NAME': cp.get('db_iris_cloud', 'name'),
+            'USER': cp.get('db_iris_cloud', 'username'),
+            'PASSWORD': cp.get('db_iris_cloud', 'password'),
+        },
     }
 
 except (configparser.NoSectionError) as err:
