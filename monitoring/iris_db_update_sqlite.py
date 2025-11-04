@@ -62,7 +62,7 @@ def refresh_iris_cloud_and_grid():
                 max(LatestEndTime) AS LatestPublish
             FROM VSuperSummaries
             WHERE LatestEndTime > DATE_SUB(NOW(), INTERVAL 1 YEAR)
-            AND (Site LIKE 'UK%' OR Site LIKE 'RAL-LCG2')
+            AND (Site LIKE 'UK%% OR Site LIKE 'RAL-LCG2')
             GROUP BY 1;
         """
         fetchset = VSuperSummaries.objects.using('iris_grid').raw(sql_query)

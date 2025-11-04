@@ -22,7 +22,7 @@ class VSuperSummaries(models.Model):
 
 
 class VAnonCloudRecords(models.Model):
-    Site = models.CharField(max_length=255, primary_key=True)
+    SiteName = models.CharField(max_length=255, primary_key=True)
     UpdateTime = models.DateTimeField()
 
     class Meta:
