@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-`iris_db_update_sqlite.py` - Syncs data from external database into local SQLite DB.
-                      -  It will be run as a standalone operation via cron.
+- Syncs data from external database into local SQLite DB.
+- It will be run as a standalone operation via cron.
 """
 import configparser
 import logging
@@ -55,6 +55,10 @@ log = logging.getLogger(__name__)
 
 
 def refresh_iris_cloud_and_grid():
+    """
+    Refreshes the IrisCloudAndGrid table by performing necessary queries and updates.
+    Intended to be called from the main execution block or scheduled tasks.
+    """
     try:
         sql_query = """
             SELECT
@@ -108,13 +112,20 @@ def refresh_iris_cloud_and_grid():
         log.exception('Error while trying to refresh IrisCloudAndGrid')
 
 
-if __name__ == "__main__":
+def main():
+    """
+    Entry point for running the iris cloud and grid data refresh process.
+    """
     log.info('=====================')
 
     refresh_iris_cloud_and_grid()
 
     log.info(
-        "Data retrieval and processing attempted. "
-        "Check the above logs for details on the sync status"
+        "Data retrieval and processing attempted."
+        "Check the above logs for details on the sync status."
     )
     log.info('=====================')
+
+
+if __name__ == "__main__":
+    main()
