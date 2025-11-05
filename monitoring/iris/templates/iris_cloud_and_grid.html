@@ -1,0 +1,35 @@
+{% load static %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>IRIS cloud and grid accounting records</title>
+  <link href="{% static 'stylesheet.css' %}" rel="stylesheet" type="text/css" />
+  <link href="{% static 'style.css' %}" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <h2>Sites publishing cloud and grid accounting records to IRIS Accounting in the last year</h2>
+  <p>Page last updated: {{ last_fetched|date:"Y-m-d H:i O" }}</p>
+
+  <br/>
+
+  <table>
+    <tr>
+      <th class='tableheader'>Site</th>
+      <th class='tableheader'>Source type</th>
+      <th class='tableheader'>Last updated</th>
+    </tr>
+    {% for record in irisCloudAndGridData %}
+    <tr onmouseover="this.className='highlight-row'" onmouseout="this.className='tabletext'" class="tabletext">
+      <td>{{ record.SiteName }}</td>
+      <td>{{ record.SourceType }}</td>
+      <td>{{ record.UpdateTime|date:"Y-m-d H:i:s" }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</body>
+
+</html>
