@@ -95,6 +95,7 @@ INSTALLED_APPS = [
     'monitoring.availability',
     'monitoring.benchmarks',
     'monitoring.iris',
+    'monitoring.validator',
 ]
 
 REST_FRAMEWORK = {

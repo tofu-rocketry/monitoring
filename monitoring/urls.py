@@ -10,4 +10,5 @@ urlpatterns = [
     path('benchmarks/', include('monitoring.benchmarks.urls')),
     path('iris/', include('monitoring.iris.urls')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('validator/', include ('monitoring.validator.urls')),
 ]
