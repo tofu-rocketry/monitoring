@@ -18,6 +18,7 @@
       <th class='tableheader'>VMsInLastUpdate</th>
       <th class='tableheader'>CloudType</th>
       <th class='tableheader'>LastUpdated</th>
+      <th class='tableheader'>Publication Status</th>
     </tr>
     {% for site in sites %}
     <tr onmouseover="this.className='highlight-row'" onmouseout="this.className='tabletext'" class="tabletext">
@@ -25,6 +26,7 @@
       <td>{{ site.Vms }}</td>
       <td>{{ site.Script }}</td>
       <td>{{ site.updated|date:"Y-m-d H:i:s" }}</td>
+      <td>{{ site.stdout }}</td>
     </tr>
     {% endfor %}
   </table>

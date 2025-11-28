@@ -26,20 +26,32 @@ from monitoring.publishing.serializers import (
     GridSiteSyncSubmitHSerializer
 )
 
+def update_dict_stdout_and_returncode(single_dict, date, days=7):
+    today = datetime.today()
 
-def update_dict_stdout_and_returncode(single_dict, date):
-    diff = datetime.today() - date
-    date = date.strftime("%Y-%m-%d")
+    # Handle future dates
+    if date > today:
+        single_dict.update({
+            'returncode': 3,
+            'stdout': "UNKNOWN"
+        })
+        return single_dict
 
-    if diff <= timedelta(days=7):
-        single_dict['returncode'] = 0
-        single_dict['stdout'] = "OK [ last published %s days ago: %s ]" % (diff.days, date)
-    elif diff > timedelta(days=7):
-        single_dict['returncode'] = 1
-        single_dict['stdout'] = "WARNING [ last published %s days ago: %s ]" % (diff.days, date)
+    diff_days = (today - date).days
+    formatted_date = date.strftime("%Y-%m-%d")
+
+    if diff_days <= days:
+        status = "OK"
+        returncode = 0
     else:
-        single_dict['returncode'] = 3
-        single_dict['stdout'] = "UNKNOWN"
+        status = "WARNING"
+        returncode = 1
+
+    single_dict.update({
+        'returncode': returncode,
+        'stdout': f"{status} [ last published {diff_days} days ago: {formatted_date} ]"
+    })
+
     return single_dict
 
 
@@ -203,11 +215,18 @@ class CloudSiteViewSet(viewsets.ReadOnlyModelViewSet):
         if last_fetched is not None:
             print(last_fetched.replace(tzinfo=None), datetime.today() - timedelta(hours=1, seconds=20))
 
+        final_response = []
         response = super(CloudSiteViewSet, self).list(request)
+
+        for single_dict in response.data:
+            date = single_dict.get('updated').replace(tzinfo=None)
+            single_dict = update_dict_stdout_and_returncode(single_dict, date)
+            final_response.append(single_dict)
+
         # Wrap data in a dict so that it can display in template.
         if type(request.accepted_renderer) is TemplateHTMLRenderer:
             response.data = {
-                'sites': response.data,
+                'sites': final_response,
                 'last_fetched': last_fetched
             }
         return response
