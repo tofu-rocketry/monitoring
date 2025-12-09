@@ -1,0 +1,38 @@
+{% load static %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Record Validator</title>
+        <link href="{% static 'stylesheet.css' %}" rel="stylesheet" type="text/css" />
+        <link href="{% static 'style.css' %}" rel="stylesheet" type="text/css" />
+    </head>
+
+    <body>
+        <h2>Record Validator!</h2>
+
+        <form id="validate-form" method="post">
+          {% csrf_token %}
+          <label for="input_record">Enter Record:</label>
+          <textarea
+            id="input_record"
+            name="input_record"
+            rows="10"
+            cols="50"
+            wrap="wrap"
+            value="{{ input_record|default:'' }}"
+          ></textarea>
+          <br><br>
+          <button type="submit">Validate!</button>
+        </form>
+
+        <div id="output">
+          {% if output %}
+            <h3>Output</h3>
+            {{ output }}
+          {% endif %}
+        </div>
+    </body>
+</html>
