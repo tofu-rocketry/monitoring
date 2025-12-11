@@ -15,6 +15,21 @@
 
         <form id="validate-form" method="post">
           {% csrf_token %}
+          <label for="record_type">Record Type:</label>
+          <select name="record_type" id="record_type">
+            <option value="All">All</option>
+            <option value="CloudRecord">Cloud Record</option>
+            <option value="CloudSummaryRecord">Cloud Summary Record</option>
+            <option value="JobRecord">Job Record</option>
+            <option value="JobRecord04">Job Record v0.4</option>
+            <option value="NormalisedSummaryRecord">Normalised Summary Record</option>
+            <option value="NormalisedSummaryRecord04">Normalised Summary Record v0.4</option>
+            <option value="SummaryRecord">Summary Record</option>
+            <option value="SummaryRecord04">Summary Record v0.4</option>
+            <option value="SyncRecord">Sync Record</option>
+          </select>
+          <p>Selecting 'All' will mean the type is determined by the record header.</p>
+          <br><br>
           <label for="input_record">Enter Record:</label>
           <textarea
             id="input_record"
@@ -26,6 +41,11 @@
           <br><br>
           <button type="submit">Validate!</button>
         </form>
+
+        <script>
+          // Setting select option back to what was selected (as it gets reset on form submission)
+          document.getElementById("record_type").value = "{{ record_type }}";
+        </script>
 
         <div id="output">
           {% if output %}
