@@ -29,7 +29,10 @@ def index(request):
 
             result = recordFactory.create_records(record)
 
-            return str(result)
+            if "Record object at" in str(result):
+                return "Record(s) valid!"
+            else:
+                return str(result)
 
         except Exception as e:
             return str(e)
@@ -38,10 +41,7 @@ def index(request):
     # On form submission, trigger record validation
     if request.method == "POST":
         input_record = request.POST.get("input_record", "")
-        try:
-            output = validate(input_record)
-        except Exception as e:
-            output = f"Error during validation: {e}"
+        output = validate(input_record)
 
     context = {
         "input_record": input_record,

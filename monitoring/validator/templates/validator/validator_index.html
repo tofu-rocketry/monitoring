@@ -22,15 +22,14 @@
             rows="10"
             cols="50"
             wrap="wrap"
-            value="{{ input_record|default:'' }}"
-          ></textarea>
+          >{{ input_record|default:''|escape }}</textarea>
           <br><br>
           <button type="submit">Validate!</button>
         </form>
 
         <div id="output">
           {% if output %}
-            <h3>Output</h3>
+            <h3>Validation Output</h3>
             {{ output }}
           {% endif %}
         </div>
