@@ -40,15 +40,15 @@ def update_dict_stdout_and_returncode(single_dict, date, warn_days=7, crit_days=
     diff_days = (today - date).days
     formatted_date = date.strftime("%Y-%m-%d")
 
-    if diff_days <= warn_days:
-        status = "OK"
-        returncode = 0
+    if diff_days > crit_days:
+        status = "CRITICAL"
+        returncode = 2
     elif diff_days > warn_days:
         status = "WARNING"
         returncode = 1
-    elif diff_days > crit_days:
-        status = "CRITICAL"
-        returncode = 2
+    else:
+        status = "OK"
+        returncode = 0
 
     single_dict.update({
         'returncode': returncode,
