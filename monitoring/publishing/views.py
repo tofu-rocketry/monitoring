@@ -26,11 +26,11 @@ from monitoring.publishing.serializers import (
     GridSiteSyncSubmitHSerializer
 )
 
-def update_dict_stdout_and_returncode(single_dict, date, days=7):
+def update_dict_stdout_and_returncode(single_dict, date, warn_days=7, crit_days=31):
     today = datetime.today()
 
-    # Handle future dates
-    if date > today:
+    # Handle null values
+    if date is None:
         single_dict.update({
             'returncode': 3,
             'stdout': "UNKNOWN"
@@ -40,12 +40,15 @@ def update_dict_stdout_and_returncode(single_dict, date, days=7):
     diff_days = (today - date).days
     formatted_date = date.strftime("%Y-%m-%d")
 
-    if diff_days <= days:
+    if diff_days <= warn_days:
         status = "OK"
         returncode = 0
-    else:
+    elif diff_days > warn_days:
         status = "WARNING"
         returncode = 1
+    elif diff_days > crit_days:
+        status = "CRITICAL"
+        returncode = 2
 
     single_dict.update({
         'returncode': returncode,
