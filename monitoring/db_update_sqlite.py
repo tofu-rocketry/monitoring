@@ -176,31 +176,30 @@ def refresh_gridsite():
 def refresh_cloudsite():
     try:
         sql_query = """
-            SELECT
-                b.SiteName,
-                COUNT(DISTINCT VMUUID) as VMs,
-                CloudType,
-                b.UpdateTime
-            FROM(
+            WITH ranked AS (
                 SELECT
                     SiteName,
-                    MAX(UpdateTime) AS latest
+                    CloudType,
+                    UpdateTime,
+                    ROW_NUMBER() OVER (
+                        PARTITION BY SiteName
+                        ORDER BY UpdateTime DESC
+                    ) AS rn
                 FROM VAnonCloudRecords
-                WHERE UpdateTime > DATE_SUB(NOW(), INTERVAL 1 YEAR)
-                GROUP BY SiteName
+                WHERE UpdateTime >= CURRENT_TIMESTAMP - INTERVAL 6 MONTH
             )
-            AS a
-            INNER JOIN VAnonCloudRecords
-            AS b
-            ON b.SiteName = a.SiteName AND b.UpdateTime = a.latest
-            GROUP BY SiteName;
+            SELECT
+                SiteName,
+                CloudType,
+                UpdateTime
+            FROM ranked
+            WHERE rn = 1;
         """
         fetchset = VAnonCloudRecord.objects.using('cloud').raw(sql_query)
 
         for f in fetchset:
             CloudSite.objects.update_or_create(
                 defaults={
-                    'Vms': f.VMs,
                     'Script': f.CloudType,
                     'updated': f.UpdateTime
                 },
