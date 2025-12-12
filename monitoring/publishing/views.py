@@ -63,8 +63,6 @@ class GridSiteViewSet(viewsets.ReadOnlyModelViewSet):
 
     def list(self, request):
         last_fetched = GridSite.objects.aggregate(Max('fetched'))['fetched__max']
-        if last_fetched is not None:
-            print(last_fetched.replace(tzinfo=None), datetime.today() - timedelta(hours=1, seconds=20))
 
         final_response = []
         response = super(GridSiteViewSet, self).list(request)
@@ -85,8 +83,6 @@ class GridSiteViewSet(viewsets.ReadOnlyModelViewSet):
     def retrieve(self, request, SiteName=None):
         last_fetched = GridSite.objects.aggregate(Max('fetched'))['fetched__max']
         # If there's no data then last_fetched is None.
-        if last_fetched is not None:
-            print(last_fetched.replace(tzinfo=None), datetime.today() - timedelta(hours=1, seconds=20))
 
         response = super(GridSiteViewSet, self).retrieve(request)
         date = response.data['updated'].replace(tzinfo=None)
@@ -124,9 +120,6 @@ class GridSiteSyncViewSet(viewsets.ReadOnlyModelViewSet):
     def list(self, request):
         last_fetched = GridSiteSync.objects.aggregate(Max('fetched'))['fetched__max']
 
-        if last_fetched is not None:
-            print(last_fetched.replace(tzinfo=None), datetime.today() - timedelta(hours=1, seconds=20))
-
         response = super(GridSiteSyncViewSet, self).list(request)
         response.data = {
             'records': response.data,
@@ -136,9 +129,6 @@ class GridSiteSyncViewSet(viewsets.ReadOnlyModelViewSet):
 
     def retrieve(self, request, SiteName=None):
         last_fetched = GridSiteSync.objects.aggregate(Max('fetched'))['fetched__max']
-
-        if last_fetched is not None:
-            print(last_fetched.replace(tzinfo=None), datetime.today() - timedelta(hours=1, seconds=20))
 
         sites_list_qs = GridSiteSync.objects.filter(SiteName=SiteName)
         sites_list_serializer = self.get_serializer(sites_list_qs, many=True)
@@ -186,9 +176,6 @@ class GridSiteSyncSubmitHViewSet(MultipleFieldLookupMixin, viewsets.ReadOnlyMode
     def retrieve(self, request, SiteName=None, YearMonth=None):
         last_fetched = GridSiteSyncSubmitH.objects.aggregate(Max('fetched'))['fetched__max']
 
-        if last_fetched is not None:
-            print(last_fetched.replace(tzinfo=None), datetime.today() - timedelta(hours=1, seconds=20))
-
         site_and_year_queryset = GridSiteSyncSubmitH.objects.filter(
             SiteName=SiteName,
             YearMonth=YearMonth
@@ -212,8 +199,6 @@ class CloudSiteViewSet(viewsets.ReadOnlyModelViewSet):
 
     def list(self, request):
         last_fetched = CloudSite.objects.aggregate(Max('fetched'))['fetched__max']
-        if last_fetched is not None:
-            print(last_fetched.replace(tzinfo=None), datetime.today() - timedelta(hours=1, seconds=20))
 
         final_response = []
         response = super(CloudSiteViewSet, self).list(request)
@@ -233,7 +218,6 @@ class CloudSiteViewSet(viewsets.ReadOnlyModelViewSet):
 
     def retrieve(self, request, SiteName=None):
         last_fetched = CloudSite.objects.aggregate(Max('fetched'))['fetched__max']
-        print(last_fetched.replace(tzinfo=None), datetime.today() - timedelta(hours=1, seconds=20))
 
         response = super(CloudSiteViewSet, self).retrieve(request)
         # Wrap data in a dict so that it can display in template.
