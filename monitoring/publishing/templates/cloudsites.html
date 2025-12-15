@@ -10,12 +10,11 @@
 </head>
 
 <body>
-  <h2>Sites publishing cloud accounting records in the last year</h2>
+  <h2>Sites publishing cloud accounting records in the last six months</h2>
   <p>Data last fetched: {{ last_fetched|date:"Y-m-d H:i O" }}</p>
   <table>
     <tr>
       <th class='tableheader'>Site</th>
-      <th class='tableheader'>VMsInLastUpdate</th>
       <th class='tableheader'>CloudType</th>
       <th class='tableheader'>LastUpdated</th>
       <th class='tableheader'>Publication Status</th>
@@ -23,7 +22,6 @@
     {% for site in sites %}
     <tr onmouseover="this.className='highlight-row'" onmouseout="this.className='tabletext'" class="tabletext">
       <td>{{ site.SiteName }}</td>
-      <td>{{ site.Vms }}</td>
       <td>{{ site.Script }}</td>
       <td>{{ site.updated|date:"Y-m-d H:i:s" }}</td>
       <td>{{ site.stdout }}</td>

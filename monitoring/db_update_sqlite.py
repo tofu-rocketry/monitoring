@@ -156,7 +156,7 @@ def refresh_gridsite():
                 Site,
                 max(LatestEndTime) AS LatestPublish
             FROM VSuperSummaries
-            WHERE LatestEndTime > DATE_SUB(NOW(), INTERVAL 1 YEAR)
+            WHERE LatestEndTime >= NOW() - INTERVAL 1 YEAR
             GROUP BY 1;
         """
         fetchset = VSuperSummaries.objects.using('grid').raw(sql_query)
@@ -176,31 +176,30 @@ def refresh_gridsite():
 def refresh_cloudsite():
     try:
         sql_query = """
-            SELECT
-                b.SiteName,
-                COUNT(DISTINCT VMUUID) as VMs,
-                CloudType,
-                b.UpdateTime
-            FROM(
+            WITH ranked AS (
                 SELECT
                     SiteName,
-                    MAX(UpdateTime) AS latest
+                    CloudType,
+                    UpdateTime,
+                    ROW_NUMBER() OVER (
+                        PARTITION BY SiteName
+                        ORDER BY UpdateTime DESC
+                    ) AS rn
                 FROM VAnonCloudRecords
-                WHERE UpdateTime > DATE_SUB(NOW(), INTERVAL 1 YEAR)
-                GROUP BY SiteName
+                WHERE UpdateTime >= NOW() - INTERVAL 6 MONTH
             )
-            AS a
-            INNER JOIN VAnonCloudRecords
-            AS b
-            ON b.SiteName = a.SiteName AND b.UpdateTime = a.latest
-            GROUP BY SiteName;
+            SELECT
+                SiteName,
+                CloudType,
+                UpdateTime
+            FROM ranked
+            WHERE rn = 1;
         """
         fetchset = VAnonCloudRecord.objects.using('cloud').raw(sql_query)
 
         for f in fetchset:
             CloudSite.objects.update_or_create(
                 defaults={
-                    'Vms': f.VMs,
                     'Script': f.CloudType,
                     'updated': f.UpdateTime
                 },
@@ -305,53 +304,82 @@ def refresh_BenchmarksBySubmitHost_from_view(view_name):
     try:
         if view_name == 'VSummaries':
             sql_query = f"""
-            SELECT DISTINCT v.Site, v.SubmitHost, v.ServiceLevelType, v.ServiceLevel, v.UpdateTime AS LatestPublish
-            FROM {view_name} AS v
-            JOIN (
-                SELECT Site, SubmitHost, MAX(UpdateTime) AS LatestPublish
-                FROM {view_name}
-                WHERE UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
-                GROUP BY Site, SubmitHost, ServiceLevelType, ServiceLevel
-            ) AS latest
-            ON v.Site = latest.Site
-               AND v.SubmitHost = latest.SubmitHost
-               AND v.UpdateTime = latest.LatestPublish
-            WHERE v.UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH);
-        """
+                WITH latest AS (
+                    SELECT
+                        Site,
+                        SubmitHost,
+                        ServiceLevelType,
+                        ServiceLevel,
+                        UpdateTime,
+                        ROW_NUMBER() OVER (
+                            PARTITION BY Site, SubmitHost
+                            ORDER BY Year DESC, Month DESC, UpdateTime DESC
+                        ) AS rn
+                    FROM VSummaries
+                    WHERE UpdateTime >= NOW() - INTERVAL 2 MONTH
+                )
+                SELECT
+                    Site,
+                    SubmitHost,
+                    ServiceLevelType,
+                    ServiceLevel,
+                    UpdateTime AS LatestPublish
+                FROM latest
+                WHERE rn = 1;
+            """
         elif view_name == 'VJobRecords':
             sql_query = f"""
-            SELECT DISTINCT v.Site, v.SubmitHost, v.ServiceLevelType, v.ServiceLevel, v.UpdateTime AS LatestPublish
-            FROM {view_name} AS v
-            JOIN (
-                SELECT Site, SubmitHost, MAX(UpdateTime) AS LatestPublish
-                FROM {view_name}
-                WHERE EndTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
-                      AND UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
-                GROUP BY Site, SubmitHost, ServiceLevelType, ServiceLevel
-            ) AS latest
-            ON v.Site = latest.Site
-               AND v.SubmitHost = latest.SubmitHost
-               AND v.UpdateTime = latest.LatestPublish
-            WHERE v.EndTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
-                  AND v.UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH);
-        """
+                WITH latest AS (
+                    SELECT
+                        Site,
+                        SubmitHost,
+                        ServiceLevelType,
+                        ServiceLevel,
+                        UpdateTime,
+                        ROW_NUMBER() OVER (
+                            PARTITION BY Site, SubmitHost
+                            ORDER BY EndTime DESC, UpdateTime DESC
+                        ) AS rn
+                    FROM VJobRecords
+                    WHERE EndTime >= NOW() - INTERVAL 2 MONTH
+                        AND UpdateTime >= NOW() - INTERVAL 2 MONTH
+                )
+                SELECT
+                    Site,
+                    SubmitHost,
+                    ServiceLevelType,
+                    ServiceLevel,
+                    UpdateTime AS LatestPublish
+                FROM latest
+                WHERE rn = 1;
+            """
         elif view_name == 'VNormalisedSummaries':
             sql_query = f"""
-            SELECT DISTINCT v.Site, v.SubmitHost, v.ServiceLevelType, ROUND(v.NormalisedWallDuration / v.WallDuration, 3) AS ServiceLevel, v.UpdateTime AS LatestPublish
-            FROM {view_name} AS v
-            JOIN (
-                SELECT Site, SubmitHost, MAX(UpdateTime) AS LatestPublish, ROUND(NormalisedWallDuration / WallDuration, 3) AS ServiceLevel
-                FROM {view_name}
-                WHERE UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
-                    AND WallDuration > 0
-                GROUP BY Site, SubmitHost, ServiceLevelType, ServiceLevel
-            ) AS latest
-            ON v.Site = latest.Site
-               AND v.SubmitHost = latest.SubmitHost
-               AND v.UpdateTime = latest.LatestPublish
-            WHERE v.UpdateTime > DATE_SUB(NOW(), INTERVAL 3 MONTH)
-                  AND v.WallDuration > 0;
-        """
+                WITH latest AS (
+                    SELECT
+                        Site,
+                        SubmitHost,
+                        ServiceLevelType,
+                        NormalisedWallDuration,
+                        WallDuration,
+                        UpdateTime,
+                        ROW_NUMBER() OVER (
+                            PARTITION BY Site, SubmitHost
+                            ORDER BY Year DESC, Month DESC, UpdateTime DESC
+                        ) AS rn
+                    FROM VNormalisedSummaries
+                    WHERE UpdateTime >= NOW() - INTERVAL 2 MONTH
+                        AND WallDuration > 0
+                )
+                SELECT
+                    Site,
+                    SubmitHost,
+                    ServiceLevelType,
+                    ROUND(NormalisedWallDuration / WallDuration, 3) AS ServiceLevel,
+                    UpdateTime AS LatestPublish
+                FROM latest
+                WHERE rn = 1;
+            """
         else:
             log.warning(f"Unknown view name: {view_name}")
             return
