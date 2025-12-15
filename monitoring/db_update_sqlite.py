@@ -156,7 +156,7 @@ def refresh_gridsite():
                 Site,
                 max(LatestEndTime) AS LatestPublish
             FROM VSuperSummaries
-            WHERE LatestEndTime > DATE_SUB(NOW(), INTERVAL 1 YEAR)
+            WHERE LatestEndTime >= NOW() - INTERVAL 1 YEAR
             GROUP BY 1;
         """
         fetchset = VSuperSummaries.objects.using('grid').raw(sql_query)
@@ -186,7 +186,7 @@ def refresh_cloudsite():
                         ORDER BY UpdateTime DESC
                     ) AS rn
                 FROM VAnonCloudRecords
-                WHERE UpdateTime >= CURRENT_TIMESTAMP - INTERVAL 6 MONTH
+                WHERE UpdateTime >= NOW() - INTERVAL 6 MONTH
             )
             SELECT
                 SiteName,

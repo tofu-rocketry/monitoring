@@ -65,7 +65,7 @@ def refresh_iris_cloud_and_grid():
                 Site,
                 max(LatestEndTime) AS LatestPublish
             FROM VSuperSummaries
-            WHERE LatestEndTime > DATE_SUB(NOW(), INTERVAL 6 MONTH)
+            WHERE LatestEndTime >= NOW() - INTERVAL 6 MONTH
             AND (Site LIKE 'UK%%' OR Site LIKE 'RAL-LCG2')
             GROUP BY 1;
         """
@@ -84,7 +84,7 @@ def refresh_iris_cloud_and_grid():
                 SiteName,
                 MAX(UpdateTime) AS LatestPublish
             FROM VAnonCloudRecords
-            WHERE UpdateTime > NOW() - INTERVAL 6 MONTH
+            WHERE UpdateTime >= NOW() - INTERVAL 6 MONTH
             GROUP BY SiteName;
         """
         fetchset = VAnonCloudRecords.objects.using('iris_cloud').raw(sql_query)
