@@ -1,0 +1,200 @@
+h12 {
+        font-size: 22px;
+        color: #336699;
+        background-color: #FFFFFF;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: bold
+}
+h1 {
+        font-size: 1.2em;
+        color: #336699;
+        background-color: #FFFFFF;
+        font-family: Arial, Helvetica, sans-serif;
+}
+h2 {
+        font-size: 1em;
+}
+
+
+h6 {
+    align: right;
+        font-size: 0.6em;
+}
+body {
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: #FFFFFF;
+        color: #000000;
+        font-size: .5px;
+        font-size: 14px;
+}
+th {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 12px;
+        color: #009999;
+    background-color: #FFFFFF;
+        font-weight: bold;
+    align: left;
+}
+a:link {
+        text-decoration: none;
+        color: #336699;
+        font-weight: bold;
+}
+a:active {
+        text-decoration: none;
+        color: #336699;
+        font-weight: bold;
+    background-color: #FFFFFF;
+}
+a:visited {
+        text-decoration: none;
+        color: #996699;
+        font-weight: bold;
+}
+a:hover {
+        color : #666666;
+        background-color: #CCCCCC;
+        font-weight: bold;
+}
+hr      {
+        color: #666666;
+    background-color: #FFFFFF;
+}
+.outlined {
+        border: 1px solid #000000;
+}
+.navbar-title {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 1em;
+        color: #FFFFFF;
+        font-weight: bold;
+
+
+}
+.navbar {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 0.6em;
+        background-color: #FFFFFF;
+
+}
+p {
+        font-family: Arial, Helvetica, sans-serif;
+        color: #000000;
+        font-size: 14px;
+        font-weight: normal;
+}
+li {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 1em;
+        color: #111111;
+        list-style-type: square;
+        font-weight: normal;
+}
+.sidebar-orange {
+        background-color: #ffe5b2;
+        background-image: url(images/orange-globe.jpg);
+        background-position: right center;
+        background-repeat: no-repeat;
+
+}
+.sidebar-green {
+        background-image: url(images/green-pulse.jpg);
+        background-repeat: repeat-x;
+        background-position: center bottom;
+        background-color: #dcf6de;
+}
+.sidebar-blue {
+        background-color: #dcf4f6;
+        background-image: url(images/blue-bars.jpg);
+        background-repeat: no-repeat;
+        background-position: right bottom;
+}
+.sidebar-pink {
+        background-color: #efdcf6;
+        background-image: url(images/pink-news.jpg);
+        background-repeat: no-repeat;
+        background-position: left bottom;
+}
+.note {
+        background-color: #E4E4E4;
+        border: 1px dotted #000000;
+        padding: 5px;
+}
+.tabletext {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 1em;
+        color: #000000;
+        background-color: #DDDDDD;
+}
+.tabletextwarning {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 1em;
+        color: #000000;
+        background-color: #FFFF00;
+}
+.tabletextok {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 1em;
+        color: #000000;
+        background-color: #00FF00;
+}
+.tabletexterror {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 1em;
+        color: #000000;
+        background-color: #FF0000;
+}
+.tabletextinfo {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 1em;
+        color: #000000;
+        background-color: #00CCFF;
+}
+.tableheader {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 1em;
+        color: #FFFFFF;
+        background-color: #000000;
+        font-weight: bold;
+        text-align: center;
+}
+.navbar-heading {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 1em;
+        background-color: #FFFFFF;
+        font-weight: bold;
+        color: #000000;
+}
+.feintoutlined {
+        border: 1px dotted #CCCCCC;
+}
+.newsHeader {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 0.9em;
+        background-color: #97A6CD;
+        font-weight: bold;
+}
+.newsBody {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 0.7em;
+        background-color: #ACBBDA;
+}
+.invisibleBorder {
+        border: thin dashed #EEEEEE;
+}
+.highlight-row {
+        background-color: #8D8D8D;
+        color: white;
+}
+
+textarea {
+        vertical-align: top;
+}
+
+button#validate-button {
+        background-color: #e0e0e0;
+        border-color: #b0b0b0;
+        cursor: pointer;
+        font-weight: bold;
+        padding: 5px 10px;
+}

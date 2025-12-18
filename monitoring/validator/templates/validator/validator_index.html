@@ -11,7 +11,7 @@
     </head>
 
     <body>
-        <h2>Record Validator!</h2>
+        <h1>Record Validator</h2>
 
         <form id="validate-form" method="post">
           {% csrf_token %}
@@ -28,18 +28,21 @@
             <option value="SummaryRecord04">Summary Record v0.4</option>
             <option value="SyncRecord">Sync Record</option>
           </select>
-          <p>Selecting 'All' will mean the type is determined by the record header.</p>
-          <br><br>
+          <p>Selecting 'All' means the type is determined by the record header.</p>
+          <p>If you select a specific record type, the header will need to be removed from the record input.</p>
+          <p>v0.4 records are the newer record type - they require dictionary fields for benchmark data.</p>
+          <br>
           <label for="input_record">Enter Record:</label>
           <textarea
             id="input_record"
             name="input_record"
-            rows="10"
+            rows="15"
             cols="50"
             wrap="wrap"
           >{{ input_record|default:''|escape }}</textarea>
           <br><br>
-          <button type="submit">Validate!</button>
+          <button type="submit" id="validate-button">Validate!</button>
+          <br><br>
         </form>
 
         <script>
