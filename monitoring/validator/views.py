@@ -28,6 +28,35 @@ def index(request):
     record_type = "All"
     output = ""
 
+    # On form submission, trigger record validation
+    if request.method == "POST":
+        input_record = request.POST.get("input_record", "")
+        record_type = request.POST.get("record_type", "")
+        output = validate(input_record, record_type)
+
+    context = {
+        "input_record": input_record,
+        "record_type": record_type,
+        "output": output,
+    }
+
+    return render(request, template_name, context)
+
+
+def validate(record: str, record_type: str) -> str:
+    """
+    Validated record(s) and record_type passed in from the html page template.
+    If record type is all, make use of the create_records apel method (expects a record header).
+    Else, make use of the _create_record_objects apel method (expects there to be no record header).
+    If the record is valid, return a "valid record" string.
+    If the record is invalid, an InvalidRecordException or RecordFactoryException is raised by the Apel methods.
+    Catch these exceptions and return the exception information.
+    """
+    if not record:
+        return "Please enter a record to be validated."
+
+    record = record.strip()
+
     # Map record_type string to record_type class
     # String is always exact as determined through html form selection option
     record_map = {
@@ -42,49 +71,19 @@ def index(request):
         "CloudSummaryRecord": CloudSummaryRecord,
     }
 
+    try:
+        recordFactory = RecordFactory()
 
-    def validate(record: str, record_type: str) -> str:
-        """
-        Validated record(s) and record_type passed in from the html page template.
-        If record type is all, make use of the create_records apel method (expects a record header).
-        Else, make use of the _create_record_objects apel method (expects there to be no record header).
-        If the record is valid, return a "valid record" string.
-        If the record is invalid, an InvalidRecordException or RecordFactoryException is raised by the Apel methods.
-        Catch these exceptions and return the exception information.
-        """
-        if not record:
-            return "Please enter a record to be validated."
+        if record_type == "All":
+            result = recordFactory.create_records(record)
+        else:
+            record_class = record_map[record_type]
+            result = recordFactory._create_record_objects(record, record_class)
 
-        record = record.strip()
+        if "Record object at" in str(result):
+            return "Record(s) valid!"
 
-        try:
-            recordFactory = RecordFactory()
+        return str(result)
 
-            if record_type == "All":
-                result = recordFactory.create_records(record)
-            else:
-                record_class = record_map[record_type]
-                result = recordFactory._create_record_objects(record, record_class)
-
-            if "Record object at" in str(result):
-                return "Record(s) valid!"
-
-            return str(result)
-
-        except (InvalidRecordException, RecordFactoryException) as e:
-            return str(e)
-
-
-    # On form submission, trigger record validation
-    if request.method == "POST":
-        input_record = request.POST.get("input_record", "")
-        record_type = request.POST.get("record_type", "")
-        output = validate(input_record, record_type)
-
-    context = {
-        "input_record": input_record,
-        "record_type": record_type,
-        "output": output,
-    }
-
-    return render(request, template_name, context)
+    except (InvalidRecordException, RecordFactoryException) as e:
+        return str(e)
