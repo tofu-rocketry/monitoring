@@ -223,6 +223,9 @@ class CloudSiteViewSet(viewsets.ReadOnlyModelViewSet):
         last_fetched = CloudSite.objects.aggregate(Max('fetched'))['fetched__max']
 
         response = super(CloudSiteViewSet, self).retrieve(request)
+        date = response.data['updated'].replace(tzinfo=None)
+        response.data = update_dict_stdout_and_returncode(response.data, date)
+
         # Wrap data in a dict so that it can display in template.
         if type(request.accepted_renderer) is TemplateHTMLRenderer:
             # Single result put in list to work with same HTML template.
@@ -230,8 +233,5 @@ class CloudSiteViewSet(viewsets.ReadOnlyModelViewSet):
                 'sites': [response.data],
                 'last_fetched': last_fetched
             }
-
-        response.data['returncode'] = 3
-        response.data['stdout'] = "UNKNOWN"
 
         return response
