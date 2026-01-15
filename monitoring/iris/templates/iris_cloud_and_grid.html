@@ -25,10 +25,10 @@
     </tr>
     {% for record in irisCloudAndGridData %}
     <tr onmouseover="this.className='highlight-row'" onmouseout="this.className='tabletext'" class="tabletext">
-      <td>{{ record.SiteName }}</td>
-      <td>{{ record.SourceType }}</td>
-      <td>{{ record.UpdateTime|date:"Y-m-d H:i:s" }}</td>
-      <td>{{ record.stdout }}</td>
+      <td class='centralTableRow'>{{ record.SiteName }}</td>
+      <td class='centralTableRow'>{{ record.SourceType }}</td>
+      <td class='centralTableRow'>{{ record.UpdateTime|date:"Y-m-d H:i:s" }}</td>
+      <td class='centralTableRow'>{{ record.stdout }}</td>
     </tr>
     {% endfor %}
   </table>

@@ -14,10 +14,8 @@ h1 {
 h2 {
         font-size: 1em;
 }
-
-
 h6 {
-    align: right;
+        text-align: right;
         font-size: 0.6em;
 }
 body {
@@ -31,9 +29,9 @@ th {
         font-family: Arial, Helvetica, sans-serif;
         font-size: 12px;
         color: #009999;
-    background-color: #FFFFFF;
+        background-color: #FFFFFF;
         font-weight: bold;
-    align: left;
+        text-align: left;
 }
 a:link {
         text-decoration: none;
@@ -44,7 +42,7 @@ a:active {
         text-decoration: none;
         color: #336699;
         font-weight: bold;
-    background-color: #FFFFFF;
+        background-color: #FFFFFF;
 }
 a:visited {
         text-decoration: none;
@@ -56,9 +54,9 @@ a:hover {
         background-color: #CCCCCC;
         font-weight: bold;
 }
-hr      {
+hr {
         color: #666666;
-    background-color: #FFFFFF;
+        background-color: #FFFFFF;
 }
 .outlined {
         border: 1px solid #000000;
@@ -68,14 +66,11 @@ hr      {
         font-size: 1em;
         color: #FFFFFF;
         font-weight: bold;
-
-
 }
 .navbar {
         font-family: Arial, Helvetica, sans-serif;
         font-size: 0.6em;
         background-color: #FFFFFF;
-
 }
 p {
         font-family: Arial, Helvetica, sans-serif;
@@ -95,7 +90,6 @@ li {
         background-image: url(images/orange-globe.jpg);
         background-position: right center;
         background-repeat: no-repeat;
-
 }
 .sidebar-green {
         background-image: url(images/green-pulse.jpg);
@@ -156,6 +150,9 @@ li {
         color: #FFFFFF;
         background-color: #000000;
         font-weight: bold;
+        text-align: center;
+}
+.centralTableRow {
         text-align: center;
 }
 .navbar-heading {
