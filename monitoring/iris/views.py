@@ -9,7 +9,6 @@ from rest_framework.renderers import TemplateHTMLRenderer
 
 from monitoring.iris.models import IrisCloudAndGrid
 from monitoring.iris.serializers import IrisCloudAndGridSerializer
-
 from monitoring.publishing.views import update_dict_stdout_and_returncode
 
 
