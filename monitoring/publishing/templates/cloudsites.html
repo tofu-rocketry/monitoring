@@ -21,10 +21,10 @@
     </tr>
     {% for site in sites %}
     <tr onmouseover="this.className='highlight-row'" onmouseout="this.className='tabletext'" class="tabletext">
-      <td>{{ site.SiteName }}</td>
-      <td>{{ site.Script }}</td>
-      <td>{{ site.updated|date:"Y-m-d H:i:s" }}</td>
-      <td>{{ site.stdout }}</td>
+      <td class='centred'>{{ site.SiteName }}</td>
+      <td class='centred'>{{ site.Script }}</td>
+      <td class='centred'>{{ site.updated|date:"Y-m-d H:i:s" }}</td>
+      <td class='centred'>{{ site.stdout }}</td>
     </tr>
     {% endfor %}
   </table>
