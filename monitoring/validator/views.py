@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.views.decorators.http import require_http_methods
 
 # Apel loader and record-checking class imports
-from apel.db.loader.loader import Loader
+from apel.db import ApelDbException
+from apel.db.loader.loader import Loader, LoaderException
 from apel.db.loader.record_factory import RecordFactory, RecordFactoryException
 from apel.db.records.record import InvalidRecordException
 
@@ -103,7 +104,7 @@ def validate(record: str, record_type: str) -> str:
             record_class = record_map[record_type]
             result = recordFactory._create_record_objects(record, record_class)
 
-        if "Record object at" in str(result):
+        if "object at" in str(result):
             return "Record(s) valid!"
 
         return str(result)
@@ -148,5 +149,5 @@ def load(record: str) -> str:
 
         return("Record(s) will load successfully!")
 
-    except Exception as e:
+    except (ApelDbException, InvalidRecordException, LoaderException, RecordFactoryException) as e:
         return str(e)
