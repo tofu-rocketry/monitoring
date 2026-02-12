@@ -26,17 +26,24 @@ def index(request):
     template_name = "validator/validator_index.html"
     input_record = ""
     record_type = "All"
+    submission_type = ""
     output = ""
 
     # On form submission, trigger record validation
     if request.method == "POST":
         input_record = request.POST.get("input_record", "")
         record_type = request.POST.get("record_type", "")
-        output = validate(input_record, record_type)
+        submission_type = request.POST.get("submission_type", "")
+        if submission_type == "load":
+            #output = load(input_record, submission_type)
+            output = "loaded"
+        else:
+            output = validate(input_record, record_type)
 
     context = {
         "input_record": input_record,
         "record_type": record_type,
+        "submission_type": submission_type,
         "output": output,
     }
 
