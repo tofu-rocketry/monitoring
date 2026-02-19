@@ -183,3 +183,15 @@ li {
         background-color: #8D8D8D;
         color: white;
 }
+
+textarea {
+        vertical-align: top;
+}
+
+button#validate-button {
+        background-color: #e0e0e0;
+        border-color: #b0b0b0;
+        cursor: pointer;
+        font-weight: bold;
+        padding: 5px 10px;
+}

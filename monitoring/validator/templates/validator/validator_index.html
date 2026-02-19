@@ -1,0 +1,60 @@
+{% load static %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Record Validator</title>
+        <link href="{% static 'stylesheet.css' %}" rel="stylesheet" type="text/css" />
+        <link href="{% static 'style.css' %}" rel="stylesheet" type="text/css" />
+    </head>
+
+    <body>
+        <h1>Record Validator</h2>
+
+        <form id="validate-form" method="post">
+          {% csrf_token %}
+          <label for="record_type">Record Type:</label>
+          <select name="record_type" id="record_type">
+            <option value="All">All</option>
+            <option value="CloudRecord">Cloud Record</option>
+            <option value="CloudSummaryRecord">Cloud Summary Record</option>
+            <option value="JobRecord">Job Record</option>
+            <option value="JobRecord04">Job Record v0.4</option>
+            <option value="NormalisedSummaryRecord">Normalised Summary Record</option>
+            <option value="NormalisedSummaryRecord04">Normalised Summary Record v0.4</option>
+            <option value="SummaryRecord">Summary Record</option>
+            <option value="SummaryRecord04">Summary Record v0.4</option>
+            <option value="SyncRecord">Sync Record</option>
+          </select>
+          <p>Selecting 'All' means the type is determined by the record header.</p>
+          <p>If you select a specific record type, the header will need to be removed from the record input.</p>
+          <p>v0.4 records are the newer record type - they require dictionary fields for benchmark data.</p>
+          <br>
+          <label for="input_record">Enter Record:</label>
+          <textarea
+            id="input_record"
+            name="input_record"
+            rows="15"
+            cols="50"
+            wrap="wrap"
+          >{{ input_record|default:''|escape }}</textarea>
+          <br><br>
+          <button type="submit" id="validate-button">Validate!</button>
+          <br><br>
+        </form>
+
+        <script>
+          // Setting select option back to what was selected (as it gets reset on form submission)
+          document.getElementById("record_type").value = "{{ record_type }}";
+        </script>
+
+        <div id="output">
+          {% if output %}
+            <h3>Validation Output</h3>
+            {{ output }}
+          {% endif %}
+        </div>
+    </body>
+</html>
