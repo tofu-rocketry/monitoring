@@ -41,18 +41,28 @@
             wrap="wrap"
           >{{ input_record|default:''|escape }}</textarea>
           <br><br>
-          <button type="submit" id="validate-button">Validate!</button>
+          <p>Select 'Validate' if you want to check only the formatting of the record(s).</p>
+          <p>Select 'Load' if you want to also check whether the record(s) will successfully load into the database.</p>
+          <input type="radio" name="submission_type" value="validate"> Validate
+          <br>
+          <input type="radio" name="submission_type" value="load"> Load
+          <br><br><br>
+          <button type="submit" id="validate-button">Submit Record(s)!</button>
           <br><br>
         </form>
 
         <script>
-          // Setting select option back to what was selected (as it gets reset on form submission)
+          // Setting select and radio option back to what was selected (as they get reset on form submission)
           document.getElementById("record_type").value = "{{ record_type }}";
+          if ("{{ submission_type }}" != "") {
+              const checkRadio = document.querySelector(`input[name=submission_type][value="{{ submission_type }}"]`);
+              checkRadio.checked = true;
+          }
         </script>
 
         <div id="output">
           {% if output %}
-            <h3>Validation Output</h3>
+            <h3>Submission Output</h3>
             {{ output }}
           {% endif %}
         </div>
