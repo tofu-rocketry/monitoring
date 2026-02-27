@@ -12,6 +12,7 @@ import django
 from django.db import DatabaseError
 import pandas as pd
 from django.utils.timezone import make_aware, is_naive
+from datetime import datetime
 
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -138,15 +139,34 @@ def determine_sync_status(f):
     """
     Helper to determine sync status between published and the database record counts.
     """
+    if is_current_month(f):
+        return "OK [ Current month ]"
+
     RecordCountPublished = f.get("RecordCountPublished")
     RecordCountInDb = f.get("RecordCountInDb")
-    rel_diff1 = abs(RecordCountPublished - RecordCountInDb)/RecordCountInDb
-    rel_diff2 = abs(RecordCountPublished - RecordCountInDb)/RecordCountPublished
-    if rel_diff1 < 0.01 or rel_diff2 < 0.01:
-        syncstatus = "OK"
-    else:
-        syncstatus = "ERROR [ Please use the Gap Publisher to synchronise this dataset]"
-    return syncstatus
+
+    # catches None or zero
+    if not RecordCountPublished or not RecordCountInDb:
+        return "WARNING [ Invalid record counts ]"
+
+    diff = abs(RecordCountPublished - RecordCountInDb)
+    rel_diff1 = diff/RecordCountInDb
+    rel_diff2 = diff/RecordCountPublished
+    if RecordCountPublished > RecordCountInDb or rel_diff1 < 0.01 or rel_diff2 < 0.01:
+        return "OK"
+
+    return "WARNING [ Please try to republish the missing data or raise a GGUS ticket ]"
+
+
+def is_current_month(f):
+    month = f.get("Month")
+    year = f.get("Year")
+
+    if month is None or year is None:
+        return False
+
+    now = datetime.now()
+    return now.month == month and now.year == year
 
 
 def refresh_gridsite():
