@@ -141,11 +141,7 @@ def load(record: str) -> str:
 
         loader = Loader(qpath, record, db_backend, db_host, db_port, db_name, db_username, db_password, pidfile)
 
-        loader.startup()
-
         loader.load_msg(record, signer)
-
-        loader.shutdown()
 
         return("Record(s) will load successfully!")
 
