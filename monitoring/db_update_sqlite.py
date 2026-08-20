@@ -152,7 +152,7 @@ def determine_sync_status(f):
     diff = abs(RecordCountPublished - RecordCountInDb)
     rel_diff1 = diff/RecordCountInDb
     rel_diff2 = diff/RecordCountPublished
-    if RecordCountPublished > RecordCountInDb or rel_diff1 < 0.01 or rel_diff2 < 0.01:
+    if RecordCountPublished > RecordCountInDb or rel_diff1 <= 0.01 or rel_diff2 <= 0.01:
         return "OK"
 
     return "WARNING [ Please try to republish the missing data or raise a GGUS ticket ]"
