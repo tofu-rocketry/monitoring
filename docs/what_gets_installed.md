@@ -8,6 +8,7 @@ Following the config file that Aquilon uses, the following are the packages inst
 - `gcc` (needed for dependencies)
 - `mariadb`
 - `tar`
+- `virtualenv` (for Python, installed using `pip` via the bootstrap script)
 
 ## Packages installed within the venv
 Within the venv, the following packages, and their dependencies, are installed through pip:
